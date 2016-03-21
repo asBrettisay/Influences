@@ -5,6 +5,11 @@
 }
 
 .link {
-  stroke: #000;
+  stroke: #ccc;
   stroke-width: 2px;
+}
+
+.artist {
+  -webkit-text-stroke: 2px #fff;
+  text-shadow: 3px 3px 0 #fff;
 }

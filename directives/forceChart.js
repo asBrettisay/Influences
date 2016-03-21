@@ -1,8 +1,10 @@
+var width = 1200, height = 1000;
+
 angular.module('influences')
 .directive('forceChart', function() {
   return {
     restrict: 'AE',
-    template: "<svg height=500 width=960></svg>",
+    template: "<svg height="+ height + " width=" + width +"></svg>",
     scope: {
       genre: '=',
     },
@@ -15,15 +17,19 @@ angular.module('influences')
 
 
 function link(scope, elem, attrs) {
-  var d3 = scope.window.d3, width = 960, height = 500;
+  var d3 = scope.window.d3;
   var svg = d3.select(elem.find("svg")[0]);
+  var center = {
+    x: width/2,
+    y: height/3
+  }
 
   var nodeData = [], edges = [];
 
   nodeData.push({
-    name: scope.genre.name,
-    x: width/2,
-    y: height/2,
+    name: scope.genre.genre,
+    x: center.x,
+    y: center.y,
     fixed: true,
     genre: true
   })
@@ -31,32 +37,57 @@ function link(scope, elem, attrs) {
   scope.genre.founders.forEach(function(person) {
     var o = {
       name: person.name,
-      weight: 1,
-      genre: true,
+      x: center.x,
+      y: center.y
     };
 
     nodeData.push(o)
-
+    console.log(o);
     edges.push({
       source: o,
       target: nodeData[0]
     })
+
+    if (person.proteges) {
+      sortProteges(person, o)
+    }
   });
+
+
+  function sortProteges(mentor, target) {
+    var o;
+
+    mentor.proteges.forEach(function(person) {
+      o = {
+        name: person.name,
+        x: center.x,
+        y: center.y
+      };
+
+      if (person.proteges) { sortProteges(person, o) }
+
+
+      nodeData.push(o);
+      console.log(o);
+      edges.push({
+        source: o,
+        target: target,
+        d: width/10
+      })
+    })
+  }
 
   var force = d3.layout.force()
                 .size([width, height])
                 .nodes(nodeData)
                 .links(edges)
                 .linkDistance(function(link) {
-                  return height/nodeData.length;
+                  return link.d ? link.d : width/5;
                 })
-                .linkStrength(0.1)
+                .linkStrength(0.9)
                 .gravity(0)
-                .friction(0.5)
-                .charge(function(node) {
-                  if (node.genre) { return -30 };
-                  return -3000;
-                })
+                .friction(0.9)
+                .charge(-1000)
                 .start();
 
 
@@ -72,18 +103,21 @@ function link(scope, elem, attrs) {
   var nodes = svg.selectAll('nodes')
                  .data(nodeData)
                  .enter().append('circle')
+                 .call(force.drag)
                  .attr('class', 'node')
-                 .attr('r', width/75)
-                 .attr('cx', function(d) { return d.x })
-                 .attr('cy', function(d) { return d.y })
+                 .attr('r', width/100)
+                 .attr('cx', function(d) { return center.x })
+                 .attr('cy', function(d) { return center.y })
 
   var text = svg.selectAll('text')
               .data(nodeData)
               .enter().append('text')
               .attr('class', 'artist')
-              .attr('x', function(d) { return d.x })
-              .attr('y', function(d) { return d.y })
+              .attr('x', function(d) { return center.x })
+              .attr('y', function(d) { return center.y })
               .text(function(d) { return d.name })
+
+
 
   force.on('tick', function() {
     nodes
@@ -102,10 +136,6 @@ function link(scope, elem, attrs) {
       .attr('x', function(d) { return d.x })
       .attr('y', function(d) { return d.y })
   })
-
-  function addArtist() {
-
-  }
 
 
 
