@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="influences">
+  <head>
+    <meta charset="utf-8">
+    <title>Influences</title>
+    <link rel="stylesheet" href="./style/normalize.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="./style/main.css" media="screen" title="no title" charset="utf-8">
+  </head>
+  <body>
+
+    <ui-view></ui-view>
+
+
+    <!-- Angular -->
+
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js">
+    </script>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.js" charset="utf-8"></script>
+
+    <!-- App -->
+    <script src="./app.js" charset="utf-8"></script>
+
+    <!-- Controllers -->
+    <script src="./main/controllers/mainCtrl.js" charset="utf-8"></script>
+
+    <!-- Services -->
+    <script src="./services/chartService.js" charset="utf-8"></script>
+    <script src="./services/artistService.js" charset="utf-8"></script>
+    <script src="./services/genreService.js" charset="utf-8"></script>
+
+    <!-- Directives -->
+    <script src="./directives/forceChart.js" charset="utf-8"></script>
+
+
+
+  </body>
+</html>

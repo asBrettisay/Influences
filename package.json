@@ -1,0 +1,26 @@
+{
+  "name": "influences",
+  "version": "1.0.0",
+  "description": "A project to chart the spread of ideas and styles.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test test/spec*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asBrettisay/Influences.git"
+  },
+  "author": "Brett Caudill",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asBrettisay/Influences/issues"
+  },
+  "homepage": "https://github.com/asBrettisay/Influences#readme",
+  "dependencies": {
+    "angular": "^1.5.2",
+    "angular-ui-router": "^0.2.18"
+  }
+}
