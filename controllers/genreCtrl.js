@@ -19,7 +19,11 @@ module.exports = {
 
   showGenre(req, res) {
     Genre.forge({id: req.params.id})
-    .fetch()
+    .fetch({
+      withRelated: [
+        'founders', 'artists'
+      ]
+    })
     .then((result) => {
       res.status(200).json(result);
     })
@@ -36,7 +40,7 @@ module.exports = {
       res.status(200).json(result);
     })
     .catch((err) => {
-      console.log(err);
+      console.log('Error creating genre', err);
       res.status(500).send(err);
     })
   },
@@ -51,14 +55,20 @@ module.exports = {
       res.status(200).send({message: "Update Successful"})
     })
     .catch((e) => {
-      console.log(e);
+      console.log('Error updating genre', e);
       res.status(500).send({message: "Error Updating:", e})
     })
   },
 
   deleteGenre(req, res) {
-    Genre.forge({id: req.params.id})
-    .destroy()
+    let genre = Genre.forge({id: req.params.id});
+    Promise.all([
+      genre.founders().detach(),
+      genre.artists().detach()
+    ])
+    .then(() => {
+      return Genre.forge({id: req.params.id}).destroy()
+    })
     .then((result) => {
       res.status(200).send({message: "Genre deleted"})
     })

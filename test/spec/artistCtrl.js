@@ -22,7 +22,7 @@ chai.use(chaiHttp);
 describe('artistCtrl', () => {
 
 
-  var testArtist, testGenre;
+  var testArtist, testGenre, testFounder;
   before((done) => {
     migrate.rollback()
     .then(() => {
@@ -37,18 +37,33 @@ describe('artistCtrl', () => {
   beforeEach((done) => {
     migrate.latest()
     .then(() => {
-      return Genre.forge(makeFake.Genre()).save()
+      let a = makeFake.Artist(),
+          g = makeFake.Genre(),
+          f = makeFake.Artist()
+
+      return Promise.all([
+        Artist.forge(a).save(),
+        Genre.forge(g).save(),
+        Artist.forge(f).save()
+      ])
     })
-    .then((_testGenre) => {
-      testGenre = _testGenre;
-      return Artist.forge(makeFake.Artist()).save()
+    .spread((a, g, f) => {
+      testArtist = a;
+      testGenre = g;
+      testFounder = f;
+
+      return Promise.all([
+        g.artists().attach([g.id, f.id]),
+        g.founders().attach(f),
+        f.proteges().attach(a)
+
+      ]);
     })
-    .then((_testArtist) => {
-      testArtist = _testArtist;
+    .then(() => {
       done();
     })
     .catch((err) => {
-      console.log(err);
+      throw err;
       done();
     })
   })
@@ -81,14 +96,29 @@ describe('artistCtrl', () => {
   });
   it('should show one artist', (done) => {
     chai.request(server)
-    .get('/api/artist/' + testArtist.id)
+    .get('/api/artist/' + testFounder.id)
     .end((e, r) => {
       if (e) throw e;
-
       r.should.have.status(200)
       r.body.should.be.a('object');
       r.body.should.have.property('name');
-      r.body.name.should.equal(testArtist.get('name'));
+      r.body.name.should.equal(testFounder.get('name'));
+
+      r.body.should.have.property('genre');
+      let g = r.body.genre;
+      g.should.be.a('array');
+      expect(g[0]).to.be.ok;
+
+      r.body.should.have.property('proteges');
+
+      let p = r.body.proteges;
+      p.should.be.a('array');
+      expect(p[0]).to.be.ok;
+
+      r.body.should.have.property('mentors');
+
+      r.body.mentors.should.be.a('array');
+
       done();
     })
   });

@@ -17,7 +17,10 @@ module.exports = {
   },
 
   showArtist(req, res) {
-    Artist.forge({id: req.params.id}).fetch()
+    Artist.forge({id: req.params.id})
+    .fetch({
+      withRelated: ['genre', 'proteges', 'mentors']
+    })
     .then((artist) => {
       res.status(200).json(artist);
     })
@@ -50,7 +53,18 @@ module.exports = {
   },
 
   deleteArtist(req, res) {
-    Artist.forge({id: req.params.id}).destroy()
+
+    let artist = Artist.forge({id: req.params.id})
+
+    Promise.all([
+      artist.founder().detach(),
+      artist.genre().detach(),
+      artist.proteges().detach(),
+      artist.mentors().detach()
+    ])
+    .then(() => {
+      return artist.destroy();
+    })
     .then((result) => {
       res.status(200).send({message: "Deleted artist"});
     })

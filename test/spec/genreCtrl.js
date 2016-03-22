@@ -23,7 +23,7 @@ describe('genreCtrl', () => {
 
 
 
-  var testArtist, testGenre;
+  var testArtist, testGenre, testFounder;
   before((done) => {
     migrate.rollback()
     .then(() => {
@@ -38,18 +38,30 @@ describe('genreCtrl', () => {
   beforeEach((done) => {
     migrate.latest()
     .then(() => {
-      return Genre.forge(makeFake.Genre()).save()
+      let a = makeFake.Artist(),
+          g = makeFake.Genre(),
+          f = makeFake.Artist();
+
+      return Promise.all([
+        Artist.forge(a).save(),
+        Genre.forge(g).save(),
+        Artist.forge(f).save()
+      ]);
     })
-    .then((_testGenre) => {
-      testGenre = _testGenre;
-      return Artist.forge(makeFake.Artist()).save()
+    .spread((a, g, f) => {
+      testArtist = a, testGenre = g, testFounder = f;
+
+      return Promise.all([
+        g.artists().attach([a.id, f.id]),
+        g.founders().attach(f),
+        f.proteges().attach(a)
+      ]);
     })
-    .then((_testArtist) => {
-      testArtist = _testArtist;
+    .then(() => {
       done();
     })
     .catch((err) => {
-      console.log(err);
+      throw err;
       done();
     })
   })
@@ -83,19 +95,28 @@ describe('genreCtrl', () => {
     })
   });
   it('should get one genre', (done) => {
-    Genre.forge(makeFake.Genre()).save()
-    .then((genre) => {
-      chai.request(server)
-      .get('/api/genre/' + genre.id)
-      .end((e, r) => {
-        if (e) throw e;
-        r.should.have.status(200)
-        r.should.have.property('body');
-        r.body.should.have.property('name');
-        r.body.name.should.equal(genre.get('name'));
-        done();
-      })
+    chai.request(server)
+    .get('/api/genre/' + testGenre.id)
+    .end((e, r) => {
+      if (e) throw e;
+      r.should.have.status(200)
+      r.should.have.property('body');
+      r.body.should.have.property('name');
+      r.body.name.should.equal(testGenre.get('name'));
+      r.body.should.have.property('founders');
+
+      let f = r.body.founders;
+      f.should.be.a('array');
+      expect(f[0]).to.be.ok;
+
+      r.body.should.have.property('artists');
+
+      let a = r.body.artists;
+      a.should.be.a('array');
+      expect(a[0]).to.be.ok;
+      done();
     })
+
   });
   it('should create a new genre', (done) => {
     var genre = makeFake.Genre();
