@@ -16,4 +16,15 @@ angular.module('influences', ['ui.router'])
         }
       }
     })
+    .state('artist', {
+      url: '/artist/:id',
+      templateUrl: './artist/views/artist.html',
+      controller: 'artistCtrl',
+      controllerAs: 'vw',
+      resolve: {
+        artist: function(artistService, $stateParams) {
+          return artistService.getArtist($stateParams.id);
+        }
+      }
+    })
 })
