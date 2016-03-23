@@ -39,7 +39,7 @@ describe('artistCtrl', () => {
     .then(() => {
       let a = makeFake.Artist(),
           g = makeFake.Genre(),
-          f = makeFake.Artist()
+          f = makeFake.Artist();
 
       return Promise.all([
         Artist.forge(a).save(),
@@ -89,7 +89,7 @@ describe('artistCtrl', () => {
 
         r.should.have.status(200)
         r.body.should.be.a('array');
-        r.body[0].should.have.property('name')
+        r.body[0].should.have.property('fullName')
         done();
       })
     })
@@ -101,8 +101,8 @@ describe('artistCtrl', () => {
       if (e) throw e;
       r.should.have.status(200)
       r.body.should.be.a('object');
-      r.body.should.have.property('name');
-      r.body.name.should.equal(testFounder.get('name'));
+      r.body.should.have.property('fullName');
+      r.body.fullName.should.equal(testFounder.get('fullName'));
 
       r.body.should.have.property('genre');
       let g = r.body.genre;
@@ -122,22 +122,28 @@ describe('artistCtrl', () => {
       done();
     })
   });
-  it('should create an artist', (done) => {
+  it('should create an artist with existing genre', (done) => {
     var newArtist = makeFake.Artist();
+    newArtist.genre = testGenre.get('name');
     chai.request(server)
     .post('/api/artist/')
     .send(newArtist)
     .end((e, r) => {
       if (e) throw e;
 
+
       r.should.have.status(200);
       r.body.should.be.a('object');
-      r.body.should.have.property('name');
-      r.body.name.should.equal(newArtist.name);
+      r.body.should.have.property('fullName');
+      r.body.fullName.should.equal(newArtist.fullName);
 
-      Artist.forge({id: r.body.id}).fetch()
+      Artist.where({id: r.body.id})
+        .fetch({withRelated: 'genre'})
       .then((artist) => {
-        expect(artist.get('name')).to.equal(newArtist.name);
+        artist = artist.toJSON();
+        let genre = artist.genre;
+        expect(genre[0].name).to.equal(testGenre.get('name'));
+        expect(artist.fullName).to.equal(newArtist.fullName);
         done();
       })
     })
@@ -145,7 +151,7 @@ describe('artistCtrl', () => {
   it('should update one artist', (done) => {
     chai.request(server)
     .put('/api/artist/' + testArtist.id)
-    .send({name: 'test'})
+    .send({fullName: 'test'})
     .end((e, r) => {
       if (e) throw e;
 
@@ -153,7 +159,7 @@ describe('artistCtrl', () => {
 
       Artist.forge({id: testArtist.id}).fetch()
       .then((artist) => {
-        expect(artist.get('name')).to.not.equal(testArtist.get('name'));
+        expect(artist.get('fullName')).to.not.equal(testArtist.get('fullName'));
         done();
       })
     })
@@ -175,18 +181,5 @@ describe('artistCtrl', () => {
     })
   });
 
-  it('should not delete an artist with wrong id', (done) => {
-    chai.request(server)
-    .delete('/api/artist/bears')
-    .end((e, r) => {
 
-      r.should.have.status(500)
-
-      Artist.forge({id: testArtist.id}).fetch()
-      .then((artist) => {
-        expect(artist).to.be.ok;
-        done();
-      })
-    })
-  })
 })

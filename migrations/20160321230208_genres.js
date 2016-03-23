@@ -2,10 +2,11 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('genres', function(table) {
     table.increments('id').primary();
-    table.string('name');
+    table.string('name').unique();
   }).createTable('artists', function(table) {
     table.increments('id').primary();
-    table.string('name');
+    table.string('fullName');
+    table.string('desc');
     table.boolean('founder');
   })
   .createTable('genre_founders', function(table) {

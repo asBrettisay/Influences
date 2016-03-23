@@ -9,7 +9,7 @@ function makeFakeGenre() {
 
 function makeFakeArtist() {
   return {
-    name: Faker.name.findName()
+    fullName: Faker.name.findName()
   }
 }
 

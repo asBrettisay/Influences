@@ -1,61 +1,17 @@
 angular.module('influences')
 .service('genreService', function($http) {
-  this.getGenre = function(genre) {
-    return {
-      name: 'Jazz',
-      proteges: [
-        {
-          name: "Joe 'King' Oliver",
-          proteges: [
-            {
-              name: "Louie Armstrong",
-              proteges: [
-                {
-                  name: 'Duke Ellington',
-                },
-                {
-                  name: 'Bing Crosby'
-                }
-              ]
-            },
-            {
-              name: 'Tommy Ladnier'
-            },
-            {
-              name: 'Paul Mares'
-            },
-            {
-              name: ' Muggsy Spanier'
-            },
-            {
-              name: 'Johnny Wiggs'
-            },
-            {
-              name: 'Louis Panico'
-            },
-            {
-              name: 'Frank Guarente'
-            }
-          ]
-        },
-        {
-          name: 'Scott Joplin',
-        },
-        {
-          name: "Charles 'Buddy' Bolden",
-        },
-        {
-          name: 'Buddy Bolden',
-          proteges: [
-            {
-              name: 'Sidney Bechet'
-            },
-            {
-              name: 'Duke Ellington'
-            }
-          ]
-        }
-      ]
-    }
+  this.getRandomGenre = function() {
+    return $http({
+      method: 'GET',
+      url: '/api/genre/random'
+    })
+    .then(function(res) {
+      if (res.status === 200) {
+        return res.data;
+      }
+    })
+    .catch(function(err) {
+      throw err;
+    })
   }
 });

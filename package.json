@@ -7,7 +7,7 @@
     "test": "mocha test/spec/"
   },
   "scripts": {
-    "test": "mocha test test/spec*"
+    "test": "NODE_ENV=test mocha test test/spec*"
   },
   "repository": {
     "type": "git",

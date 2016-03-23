@@ -4,6 +4,10 @@ const Bookshelf = require('../bookshelf'),
       Artist = require('../models/Artist'),
       Genre = require('../models/Genre');
 
+function getGenreByName(name) {
+  return Genre.where('name', name).fetch()
+}
+
 module.exports = {
   indexArtists(req, res) {
     Artist.forge()
@@ -30,11 +34,25 @@ module.exports = {
   },
 
   createArtist(req, res) {
-    Artist.forge(req.body).save()
-    .then((result) => {
-      res.status(200).json(result);
+
+    var genreId, artist
+    getGenreByName(req.body.genre)
+    .then((genre) => {
+      genreId = genre.id;
+
+      delete req.body.genre;
+
+      return Artist.forge(req.body).save()
+    })
+    .then((_artist) => {
+      artist = _artist;
+      return artist.genre().attach(genreId)
+    })
+    .then(() => {
+      res.status(200).send(artist);
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send(err);
     })
   },

@@ -14,3 +14,7 @@
   text-shadow: 3px 3px 0 #fff;
   color: #000;
 }
+
+.block {
+  display: block;
+}

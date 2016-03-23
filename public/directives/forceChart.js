@@ -31,7 +31,7 @@ angular.module('influences')
         console.log(d);
         console.log(nodeData);
         nodeData.forEach(function(node) {
-          if (node.name === d.name) {
+          if (node.fullName === d.fullName) {
             scope.root = node;
             console.log('New root is', scope.root);
           }
@@ -40,8 +40,13 @@ angular.module('influences')
       }
 
       function initRoot() {
+
+        if (scope.root.founders) {
+          scope.root.proteges = scope.root.founders;
+        }
+
         nodeData.push({
-          name: scope.root.name,
+          name: (scope.root.fullName || scope.root.name),
           x: center.x,
           y: center.y,
           fixed: true,
@@ -50,7 +55,7 @@ angular.module('influences')
 
         scope.root.proteges.forEach(function(person) {
           var o = {
-            name: person.name,
+            name: person.fullName,
             x: center.x,
             y: center.y
           };
@@ -76,7 +81,7 @@ angular.module('influences')
 
         mentor.proteges.forEach(function(person) {
           o = {
-            name: person.name,
+            name: person.fullName,
             x: center.x,
             y: center.y,
             proteges: person.proteges

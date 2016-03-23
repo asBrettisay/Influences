@@ -15,6 +15,8 @@ app.listen(port, () => {
   console.log('Listening on', port);
 })
 
+app.get('/api/genre/random', genre.getRandomGenre);
+
 app.get('/api/genre/', genre.indexGenres);
 app.get('/api/genre/:id', genre.showGenre);
 app.post('/api/genre/', genre.createGenre);

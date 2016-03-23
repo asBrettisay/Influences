@@ -118,6 +118,8 @@ describe('genreCtrl', () => {
     })
 
   });
+
+
   it('should create a new genre', (done) => {
     var genre = makeFake.Genre();
     chai.request(server)
@@ -133,10 +135,12 @@ describe('genreCtrl', () => {
         done();
       })
   });
+
+
   it('should update an existing genre', (done) => {
     chai.request(server)
       .put('/api/genre/' + testGenre.id)
-      .send({name: 'test'})
+      .send({name: 'breakfast'})
       .end((e, r) => {
         if (e) throw e;
 
@@ -148,12 +152,13 @@ describe('genreCtrl', () => {
         Genre.forge({id: testGenre.id})
         .fetch()
         .then((genre) => {
-          expect(genre.get('name')).to.equal('test');
+          expect(genre.get('name')).to.equal('breakfast');
           done();
         })
-
       })
   });
+
+
   it('should delete a genre', (done) => {
     chai.request(server)
       .delete('/api/genre/' + testGenre.id)
@@ -171,19 +176,31 @@ describe('genreCtrl', () => {
       })
   });
 
-  it('should not delete anything if id is incorrect', (done) => {
-    chai.request(server)
-    .delete('/api/genre/' + testGenre.id + 'bears')
-    .end((e, r) => {
-      r.should.have.status(500)
-      r.should.have.property('body');
-      r.body.should.have.property('message');
 
-      Genre.forge({id: testGenre.id})
-      .fetch()
-      .then((genre) => {
-        expect(genre.get('name')).to.equal(testGenre.get('name'));
-        done();
+  it('should add an artist as a founder', (done) => {
+    let newArtist = makeFake.Artist();
+    Artist.forge(newArtist).save()
+    .then((artist) => {
+      artist = artist.toJSON();
+      testGenre = testGenre.toJSON()
+      testGenre.founders = [artist]
+
+      chai.request(server)
+      .put('/api/genre/' + testGenre.id)
+      .send(testGenre)
+      .end((e, r) => {
+        if (e) throw e;
+
+        r.should.have.status(200);
+        r.body.should.be.ok;
+
+        Genre.forge({id: testGenre}).fetch({withRelated: ['founders']})
+        .then((genre) => {
+          genre = genre.toJSON();
+          genre.founders.should.be.a('array');
+          genre.founders[0].should.be.ok;
+          done();
+        })
       })
     })
   })

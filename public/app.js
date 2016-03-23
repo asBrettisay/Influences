@@ -12,7 +12,7 @@ angular.module('influences', ['ui.router'])
       controllerAs: 'main',
       resolve: {
         genre: function(genreService) {
-          return genreService.getGenre('jazz');
+          return genreService.getRandomGenre();
         }
       }
     })
@@ -26,5 +26,15 @@ angular.module('influences', ['ui.router'])
           return artistService.getArtist($stateParams.id);
         }
       }
+    })
+    .state('artist.edit', {
+      url: 'edit',
+      templateUrl: './artist/views/edit-artist.html',
+    })
+    .state('newArtist', {
+      url: '/artist/new',
+      templateUrl: './newArtist/views/artist.html',
+      controller: 'newArtistCtrl',
+      controllerAs: 'vw',
     })
 })

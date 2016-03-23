@@ -1,3 +1,8 @@
-<h1>{{vw.artist.name}}</h1>
-<p>{{vw.artist.desc}}</p>
-<force-chart root="vw.artist"></force-chart>
+<div class="container">
+  <h1>{{vw.artist.name}}</h1>
+  <p>{{vw.artist.desc}}</p>
+  <button ui-sref="artist.edit">Edit Artist</button>
+  <ui-view></ui-view>
+  <force-chart root="vw.artist"></force-chart>
+
+</div>

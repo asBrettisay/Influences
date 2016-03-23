@@ -49,7 +49,22 @@ module.exports = {
     Genre.forge({id: req.params.id})
     .fetch()
     .then((genre) => {
-      return genre.save(req.body, {patch: true})
+
+      let foundersP;
+      if (req.body.founders) {
+        let founders = req.body.founders.map(function(f) {
+          return f.id;
+        })
+
+        foundersP = genre.founders().attach(founders);
+        delete req.body.founders;
+      }
+
+      let patchP = genre.save(req.body, {patch:true});
+
+      return foundersP ?
+      Promise.all([foundersP, patchP]) :
+      patchP
     })
     .then((result) => {
       res.status(200).send({message: "Update Successful"})
@@ -74,6 +89,22 @@ module.exports = {
     })
     .catch((err) => {
       res.status(500).send({message: "Error deleting user:", err})
+    })
+  },
+
+  getRandomGenre(req, res) {
+    Genre.forge().fetchAll()
+    .then((genres) => {
+      var num = (genres.length === 1) ? 1 : Math.random() * genres.length;
+      return Genre.forge({id: num})
+      .fetch({
+        withRelated: [
+          'founders'
+        ]
+      })
+    .then((genre) => {
+      res.status(200).json(genre);
+      })
     })
   }
 };
