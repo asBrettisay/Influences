@@ -6,6 +6,7 @@
       <input class="u-full-width" type="text" ng-model="vw.artist.fullName">
     </div>
     <div class="six columns">
+    <!-- UI-Selects -->
 
       <!-- Select Related Genre -->
       <label>Select genre(s):</label>
@@ -22,7 +23,25 @@
           <span ng-bind="genre.name"></span>
         </ui-select-choices>
       </ui-select>
-      {{vw.artist.genre}}
+
+      <!-- Select Related Artists -->
+      <label>Select Influences</label>
+      <ui-select multiple
+      ng-model="vw.artist.mentors"
+      >
+        <ui-select-match
+        placeholder="Select mentor..."
+        >
+          {{$item.fullName}}
+        </ui-select-match>
+        <ui-select-choices
+        repeat = "artist in vw.artistList"
+        >
+          <span ng-bind="artist.fullName"></span>
+        </ui-select-choices>
+      </ui-select>
+      <!-- End UI-select -->
+
     </div>
   </div>
 

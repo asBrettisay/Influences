@@ -2,7 +2,7 @@ angular.module('influences')
 .controller('artistCtrl', function($scope, artist, artistService, $state, allArtists, allGenres) {
   this.artist = artist;
 
-  this.artistCollection = allArtists;
+  this.artistList = allArtists;
 
   this.genreList = allGenres;
 

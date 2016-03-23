@@ -23,5 +23,15 @@ angular.module('influences')
     .then(function(res) {
       return res.data;
     })
+  },
+
+  this.getGenre = function(id) {
+    return $http({
+      method: 'GET',
+      url: '/api/genre/' + id
+    })
+    .then(function(res) {
+      return res.data;
+    })
   }
 });

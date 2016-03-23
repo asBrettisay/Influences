@@ -23,6 +23,7 @@ app.get('/api/genre/random', genre.getRandomGenre);
 
 app.get('/api/genre/', genre.indexGenres);
 app.get('/api/genre/:id', genre.showGenre);
+// Get a genre. Takes a genre id. Will collect each founder and their proteges.
 app.post('/api/genre/', genre.createGenre);
 app.put('/api/genre/:id', genre.updateGenre);
 app.delete('/api/genre/:id', genre.deleteGenre);

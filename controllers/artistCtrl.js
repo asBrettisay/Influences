@@ -64,13 +64,19 @@ module.exports = {
       let gIds = req.body.genre.map(function(g) {
         return g.id;
       })
+
+      let mIds = req.body.mentors.map(function(m) {
+        return m.id;
+      })
+
       delete req.body.genre;
       delete req.body.mentors;
       delete req.body.proteges;
 
       let genreP = artist.genre().attach(gIds);
+      let mentorP = artist.mentors().attach(mIds);
       let artistP = artist.save(req.body, {patch: true})
-      return Promise.all([genreP, artistP])
+      return Promise.all([genreP, mentorP, artistP])
     })
     .then((artist) => {
       res.status(200).send({message: 'Update successful'});

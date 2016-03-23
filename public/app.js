@@ -4,7 +4,7 @@ angular.module('influences', ['ui.router',
                               'ui.select',
                               'ngSanitize'])
 .config(function($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/main')
+  // $urlRouterProvider.otherwise('/main')
 
   $stateProvider
     .state('main', {
@@ -15,6 +15,17 @@ angular.module('influences', ['ui.router',
       resolve: {
         genre: function(genreService) {
           return genreService.getRandomGenre();
+        }
+      }
+    })
+    .state('genre', {
+      url: '/genre/:id',
+      templateUrl: './genre/views/genre.html',
+      controller: 'genreCtrl',
+      controllerAs: 'vw',
+      resolve: {
+        genre: function(genreService, $stateParams) {
+          return genreService.getGenre($stateParams.id);
         }
       }
     })

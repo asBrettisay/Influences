@@ -4,6 +4,17 @@ const Bookshelf = require('../bookshelf'),
       Artist = require('../models/Artist'),
       Genre = require('../models/Genre');
 
+function gatherArtists(model) {
+  var founders = model.related('founders')
+                  .fetch({
+                    withRelated: [
+                      'proteges'
+                    ]
+                  })
+
+  return Promise.resolve(founders);
+}
+
 module.exports = {
   indexGenres(req, res, next) {
     Genre.forge()
@@ -25,7 +36,15 @@ module.exports = {
       ]
     })
     .then((result) => {
-      res.status(200).json(result);
+      return Promise.all([
+        gatherArtists(result),
+        result
+      ])
+    })
+    .spread((artists, genre) => {
+      genre.founders = artists;
+      console.log(genre);
+      res.status(200).json(genre);
     })
     .catch((error) => {
       console.log(error);
@@ -95,7 +114,7 @@ module.exports = {
   getRandomGenre(req, res) {
     Genre.forge().fetchAll()
     .then((genres) => {
-      var num = (genres.length === 1) ? 1 : Math.random() * genres.length;
+      var num = (genres.length === 1) ? 1 : Math.floor(Math.random() * genres.length);
       return Genre.forge({id: num})
       .fetch({
         withRelated: [
