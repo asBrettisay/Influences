@@ -149,9 +149,10 @@ describe('artistCtrl', () => {
     })
   });
   it('should update one artist', (done) => {
+    testArtist.genre = [testGenre];
     chai.request(server)
     .put('/api/artist/' + testArtist.id)
-    .send({fullName: 'test'})
+    .send({fullName: 'test', genre: [testGenre]})
     .end((e, r) => {
       if (e) throw e;
 

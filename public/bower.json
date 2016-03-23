@@ -1,0 +1,25 @@
+{
+  "name": "influences",
+  "homepage": "https://github.com/asBrettisay/Influences",
+  "authors": [
+    "asBrettisay <brett.caudill.is@gmail.com>"
+  ],
+  "description": "A project to chart the geneology of influential people",
+  "main": "index.html",
+  "moduleType": [
+    "es6"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "select2": "^4.0.2",
+    "ui-select": "angular-ui-select#^0.16.0"
+  }
+}

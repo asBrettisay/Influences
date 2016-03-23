@@ -14,7 +14,7 @@ exports.seed = function(knex, Promise) {
     knex('artists').insert([
       {
         fullName: 'Louie Armstrong',
-        desc: 'Louis Armstrong (August 4, 1901 – July 6, 1971), nicknamed Satchmo or Pops, was an African American jazz trumpeter, composer and singer who became one of the pivotal and most influential figures in jazz music.',
+        description: 'Louis Armstrong (August 4, 1901 – July 6, 1971), nicknamed Satchmo or Pops, was an African American jazz trumpeter, composer and singer who became one of the pivotal and most influential figures in jazz music.',
       },
       {
         fullName: "Joe 'King' Oliver"

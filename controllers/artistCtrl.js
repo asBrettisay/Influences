@@ -58,16 +58,26 @@ module.exports = {
   },
 
   updateArtist(req, res) {
-    console.log(req.body);
     Artist.forge({id: req.params.id}).fetch()
     .then((artist) => {
-      return artist.save(req.body, {patch: true})
+
+      let gIds = req.body.genre.map(function(g) {
+        return g.id;
+      })
+      delete req.body.genre;
+      delete req.body.mentors;
+      delete req.body.proteges;
+
+      let genreP = artist.genre().attach(gIds);
+      let artistP = artist.save(req.body, {patch: true})
+      return Promise.all([genreP, artistP])
     })
     .then((artist) => {
       res.status(200).send({message: 'Update successful'});
     })
     .catch((err) => {
-      res.status(500).send({message: 'Update failed', err});
+      console.log(err);
+      res.status(500).send({message: 'Update failed', error: err});
     })
   },
 

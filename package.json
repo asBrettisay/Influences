@@ -22,12 +22,14 @@
   "dependencies": {
     "angular": "^1.5.2",
     "angular-ui-router": "^0.2.18",
+    "angular-ui-select": "^0.12.100",
     "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",
     "bookshelf": "^0.9.2",
     "express": "^4.13.4",
     "knex": "^0.10.0",
-    "pg": "^4.5.1"
+    "pg": "^4.5.1",
+    "selectize": "^0.12.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

@@ -5,9 +5,32 @@
       <label for="nameInput">Artist Name:</label>
       <input class="u-full-width" type="text" ng-model="vw.artist.fullName">
     </div>
+    <div class="six columns">
+
+      <!-- Select Related Genre -->
+      <label>Select genre(s):</label>
+      <ui-select multiple
+      ng-model="vw.artist.genre"
+      >
+        <ui-select-match
+        placeholder="Select genre..."
+        >
+          {{$item.name}}
+        </ui-select-match>
+        <ui-select-choices
+        repeat="genre in vw.genreList">
+          <span ng-bind="genre.name"></span>
+        </ui-select-choices>
+      </ui-select>
+      {{vw.artist.genre}}
+    </div>
   </div>
 
-  <label for="artistDesc">Description:</label>
-  <textarea name="artistDesc" class="u-full-width" ng-model="vw.artist.desc"></textarea>
+  <label for="artistdescription">Description:</label>
+  <textarea name="artistdescription" class="u-full-width" ng-model="vw.artist.description"></textarea>
+
+
+
+
   <input class="button-primary" type="submit" value="submit" ng-click="vw.updateArtist(vw.artist)">
 </form>

@@ -35,3 +35,5 @@ node_modules
 .DS_Store
 knexfile.js
 /test/test.sqlite3
+
+bower_components

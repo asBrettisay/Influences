@@ -1,6 +1,8 @@
 'use strict'
 
-angular.module('influences', ['ui.router'])
+angular.module('influences', ['ui.router',
+                              'ui.select',
+                              'ngSanitize'])
 .config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/main')
 
@@ -24,6 +26,12 @@ angular.module('influences', ['ui.router'])
       resolve: {
         artist: function(artistService, $stateParams) {
           return artistService.getArtist($stateParams.id);
+        },
+        allArtists: function(artistService) {
+          return artistService.getAllArtists();
+        },
+        allGenres: function(genreService) {
+          return genreService.getAllGenres();
         }
       }
     })
