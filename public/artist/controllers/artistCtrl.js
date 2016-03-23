@@ -1,6 +1,7 @@
 angular.module('influences')
 .controller('artistCtrl', function($scope, artist, artistService, $state, allArtists, allGenres) {
   this.artist = artist;
+  console.log(this.artist);
 
   this.artistList = allArtists;
 

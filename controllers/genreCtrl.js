@@ -43,7 +43,7 @@ module.exports = {
     })
     .spread((artists, genre) => {
       genre.founders = artists;
-      console.log(genre);
+
       res.status(200).json(genre);
     })
     .catch((error) => {

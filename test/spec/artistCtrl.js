@@ -152,7 +152,11 @@ describe('artistCtrl', () => {
     testArtist.genre = [testGenre];
     chai.request(server)
     .put('/api/artist/' + testArtist.id)
-    .send({fullName: 'test', genre: [testGenre]})
+    .send({
+        fullName: 'test',
+        genre: [testGenre],
+        mentors: [testFounder], proteges: []
+      })
     .end((e, r) => {
       if (e) throw e;
 
@@ -160,6 +164,7 @@ describe('artistCtrl', () => {
 
       Artist.forge({id: testArtist.id}).fetch()
       .then((artist) => {
+        expect(artist.get('fullName')).to.be.ok;
         expect(artist.get('fullName')).to.not.equal(testArtist.get('fullName'));
         done();
       })

@@ -73,16 +73,17 @@ module.exports = {
       delete req.body.mentors;
       delete req.body.proteges;
 
-      let genreP = artist.genre().attach(gIds);
-      let mentorP = artist.mentors().attach(mIds);
-      let artistP = artist.save(req.body, {patch: true})
+      let genreP = artist.genre().attach(gIds),
+          mentorP = artist.mentors().attach(mIds),
+          artistP = artist.save(req.body, {patch: true});
+
       return Promise.all([genreP, mentorP, artistP])
     })
     .then((artist) => {
       res.status(200).send({message: 'Update successful'});
     })
     .catch((err) => {
-      console.log(err);
+      console.log('Error updating artist', err);
       res.status(500).send({message: 'Update failed', error: err});
     })
   },
