@@ -58,6 +58,7 @@ module.exports = {
   },
 
   updateArtist(req, res) {
+    console.log(req.body);
     Artist.forge({id: req.params.id}).fetch()
     .then((artist) => {
       return artist.save(req.body, {patch: true})
@@ -66,7 +67,7 @@ module.exports = {
       res.status(200).send({message: 'Update successful'});
     })
     .catch((err) => {
-      res.status(500).send({message: 'Update failed'});
+      res.status(500).send({message: 'Update failed', err});
     })
   },
 
@@ -87,7 +88,7 @@ module.exports = {
       res.status(200).send({message: "Deleted artist"});
     })
     .catch((err) => {
-      res.status(500).send({message: "Delete failed:", err});
+      res.status(500).send({message: "Delete failed:", error: err});
     })
   }
 };

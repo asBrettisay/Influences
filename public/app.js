@@ -27,8 +27,11 @@ angular.module('influences', ['ui.router'])
         }
       }
     })
+    .state('artist.show', {
+      templateUrl: './artist/views/show.html',
+    })
     .state('artist.edit', {
-      url: 'edit',
+      url: '/edit',
       templateUrl: './artist/views/edit-artist.html',
     })
     .state('newArtist', {

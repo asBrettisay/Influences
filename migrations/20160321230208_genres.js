@@ -3,11 +3,13 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('genres', function(table) {
     table.increments('id').primary();
     table.string('name').unique();
+    table.string('type');
   }).createTable('artists', function(table) {
     table.increments('id').primary();
     table.string('fullName');
     table.string('desc');
     table.boolean('founder');
+    table.string('type');
   })
   .createTable('genre_founders', function(table) {
     table.integer('genre_id').references('genres.id');

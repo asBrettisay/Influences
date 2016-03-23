@@ -27,18 +27,6 @@ angular.module('influences')
         initRoot();
       });
 
-      function selectNode(d) {
-        console.log(d);
-        console.log(nodeData);
-        nodeData.forEach(function(node) {
-          if (node.fullName === d.fullName) {
-            scope.root = node;
-            console.log('New root is', scope.root);
-          }
-        })
-        scope.$digest();
-      }
-
       function initRoot() {
 
         if (scope.root.founders) {
@@ -53,23 +41,28 @@ angular.module('influences')
           root: true
         })
 
-        scope.root.proteges.forEach(function(person) {
-          var o = {
-            name: person.fullName,
-            x: center.x,
-            y: center.y
-          };
+        if (scope.root.proteges) {
 
-          nodeData.push(o)
-          edges.push({
-            source: o,
-            target: nodeData[0]
-          })
+          scope.root.proteges.forEach(function(person) {
+            var o = {
+              name: person.fullName,
+              x: center.x,
+              y: center.y,
+              id: person.id
+            };
 
-          if (person.proteges) {
-            sortProteges(person, o)
-          }
-        });
+            nodeData.push(o)
+            edges.push({
+              source: o,
+              target: nodeData[0]
+            })
+
+            if (person.proteges) {
+              sortProteges(person, o)
+            }
+          });
+        }
+
         initForce();
       }
 
@@ -133,7 +126,7 @@ angular.module('influences')
                        .attr('cx', function(d) { return center.x })
                        .attr('cy', function(d) { return center.y })
                        .on('click', function(d) {
-                         $state.go('artist', {id: d.id})
+                         $state.go('artist.show', {id: d.id})
                        })
 
 
