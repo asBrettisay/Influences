@@ -1,5 +1,6 @@
 const
-  Faker = require('faker');
+  Faker = require('faker'),
+  Artist = require('../../models/Artist');
 
 function makeFakeGenre() {
   return {
@@ -9,11 +10,24 @@ function makeFakeGenre() {
 
 function makeFakeArtist() {
   return {
-    fullName: Faker.name.findName()
+    fullName: Faker.name.findName(),
   }
+}
+
+function artistAndSave() {
+  return new Artist(makeFakeArtist()).save()
+}
+
+function relationships(artist) {
+  artist.set('genre', []);
+  artist.set('mentors', []);
+  artist.set('proteges', []);
+  return artist;
 }
 
 module.exports = {
   Artist: makeFakeArtist,
-  Genre: makeFakeGenre
+  Genre: makeFakeGenre,
+  artistAndSave: artistAndSave,
+  relationships: relationships
 };

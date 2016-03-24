@@ -187,8 +187,38 @@ describe('artistCtrl', () => {
     })
   });
 
-  it('should add proteges to an artist', (done) => {
+  it.skip('should add proteges to an artist', (done) => {
 
+    Promise.all([
+      makeFake.artistAndSave(),
+      makeFake.artistAndSave(),
+      makeFake.artistAndSave(),
+    ])
+    .spread((newArtist, protege1, protege2) => {
+      newArtist = makeFake.relationships(newArtist);
+
+      chai.request(server)
+      .put('/api/artist/' + newArtist.id)
+      .send({proteges: [protege1, protege2]})
+      .end((e, r) => {
+
+        r.should.have.status(200)
+
+        return Artist.forge({id: newArtist.id})
+                .fetch({
+                  withRelated: [
+                    'proteges'
+                  ]
+                })
+
+      })
+      .then((artist) => {
+        let proteges = artist.related('proteges');
+        proteges.should.be.a('array');
+        proteges[0].should.be.ok;
+        done();
+      })
+    })
   })
 
 
