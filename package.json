@@ -7,7 +7,9 @@
     "test": "mocha test/spec/"
   },
   "scripts": {
-    "test": "NODE_ENV=test mocha test test/spec*"
+    "test": "NODE_ENV=test mocha test test/spec*",
+    "postinstall": "knex migrate:latest --env test; knex migrate:latest --env test; knex seed:run",
+    "prestart": "npm run postinstall"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
     "faker": "^3.1.0",
+    "gulp": "^3.9.1",
     "sqlite3": "^3.1.2"
   }
 }
