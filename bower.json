@@ -1,0 +1,21 @@
+{
+  "name": "influences",
+  "description": "A project to chart the spread of ideas and styles.",
+  "main": "index.js",
+  "authors": [
+    "Brett Caudill"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/asBrettisay/Influences",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ui-select": "angular-ui-select#^0.16.0"
+  }
+}
