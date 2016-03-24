@@ -11,7 +11,7 @@ function gatherArtists(model) {
                       'proteges'
                     ]
                   })
-
+                  
   return Promise.resolve(founders);
 }
 

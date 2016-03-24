@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.table('artists', function(table) {
-    table.dropColumn('description');
+    table.dropColumn('desc');
     table.text('description');
   })
 
@@ -10,7 +10,7 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
   return knex.schema.table('artists', function(table) {
     table.dropColumn('description');
-    table.string('description');
+    table.string('desc');
 
   })
 };
