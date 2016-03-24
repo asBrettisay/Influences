@@ -14,13 +14,17 @@ function resolveRelationships(artist, body) {
   var proteges = artist.related('proteges');
 
   return Promise.all([
-    genres.detach(detachById(genres, body.genre)),
-    mentors.detach(detachById(mentors, body.mentors)),
-    proteges.detach(detachById(proteges, body.proteges))
+    genres.detach(byId(genres, body.genre)),
+    mentors.detach(byId(mentors, body.mentors)),
+    proteges.detach(byId(proteges, body.proteges))
   ])
 }
 
-function detachById(col, targets) {
+function byId(col, targets) {
+  if (!col) {
+    console.log('Col is undefined. targets is', targets);
+    return;
+  }
   var out = col.map(function(item) {
     for (var i = 0; i < targets.length; i++) {
       if (item.id === targets[i].id) {
