@@ -7,7 +7,9 @@ exports.up = function(knex, Promise) {
   }).createTable('artists', function(table) {
     table.increments('id').primary();
     table.string('fullName');
-    table.string('desc');
+    table.string('firstName');
+    table.string('lastName');
+    table.text('description');
     table.boolean('founder');
     table.string('type');
   })
@@ -23,6 +25,19 @@ exports.up = function(knex, Promise) {
     table.integer('mentor_id').references('artists.id');
     table.integer('protege_id').references('artists.id');
   })
+  .createTable('users', function(table) {
+    table.increments('id').primary();
+    table.string('username').unique();
+    table.string('firstName');
+    table.string('lastName');
+    table.text('bio');
+    table.string('email');
+    table.string('passwordHash');
+  })
+  .createTable('users_artists', function(table) {
+    table.integer('user_id').references('users.id');
+    table.integer('artist_id').references('artists.id');
+  })
 };
 
 exports.down = function(knex, Promise) {
@@ -30,6 +45,8 @@ exports.down = function(knex, Promise) {
     .dropTable('genre_founders')
     .dropTable('artists_genre')
     .dropTable('artists_proteges')
+    .dropTable('users_artists')
+    .dropTable('users')
     .dropTable('artists')
     .dropTable('genres');
 };
