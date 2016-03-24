@@ -187,5 +187,9 @@ describe('artistCtrl', () => {
     })
   });
 
+  it('should add proteges to an artist', (done) => {
+
+  })
+
 
 })

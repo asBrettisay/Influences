@@ -8,6 +8,30 @@ function getGenreByName(name) {
   return Genre.where('name', name).fetch()
 }
 
+function resolveRelationships(artist, body) {
+  var genres = artist.related('genre');
+  var mentors = artist.related('mentors');
+  var proteges = artist.related('proteges');
+
+  return Promise.all([
+    genres.detach(detachById(genres, body.genre)),
+    mentors.detach(detachById(mentors, body.mentors)),
+    proteges.detach(detachById(proteges, body.proteges))
+  ])
+}
+
+function detachById(col, targets) {
+  var out = col.map(function(item) {
+    for (var i = 0; i < targets.length; i++) {
+      if (item.id === targets[i].id) {
+        return targets[i].id;
+      }
+    }
+  });
+
+  return out;
+}
+
 module.exports = {
   indexArtists(req, res) {
     Artist.forge()
@@ -58,8 +82,19 @@ module.exports = {
   },
 
   updateArtist(req, res) {
-    Artist.forge({id: req.params.id}).fetch()
-    .then((artist) => {
+    let artist;
+    Artist.forge({id: req.params.id})
+    .fetch({
+      withRelated: [
+        'mentors', 'proteges', 'genre'
+      ]
+    })
+    .then((_artist) => {
+      artist = _artist;
+
+      return resolveRelationships(artist, req.body)
+    })
+    .then(() => {
 
       let gIds = req.body.genre.map(function(g) {
         return g.id;
@@ -69,15 +104,20 @@ module.exports = {
         return m.id;
       })
 
+      let pIds = req.body.proteges.map(function(p) {
+        return p.id;
+      })
+
       delete req.body.genre;
       delete req.body.mentors;
       delete req.body.proteges;
 
       let genreP = artist.genre().attach(gIds),
           mentorP = artist.mentors().attach(mIds),
+          protegeP = artist.proteges().attach(pIds),
           artistP = artist.save(req.body, {patch: true});
 
-      return Promise.all([genreP, mentorP, artistP])
+      return Promise.all([genreP, mentorP, artistP, protegeP])
     })
     .then((artist) => {
       res.status(200).send({message: 'Update successful'});

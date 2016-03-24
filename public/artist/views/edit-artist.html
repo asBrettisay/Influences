@@ -40,16 +40,34 @@
           <span ng-bind="artist.fullName"></span>
         </ui-select-choices>
       </ui-select>
+
+      <!-- Select Protege Artists -->
+      <label>Select Proteges</label>
+      <ui-select multiple
+      ng-model="vw.artist.proteges"
+      >
+        <ui-select-match placeholder="Select protege...">
+          {{$item.fullName}}
+        </ui-select-match>
+        <ui-select-choices
+          group-by="vw.groupArtists"
+          repeat="artist in vw.artistList | propsFilter: {fullName: $select.search}"
+          >
+          <div ng-bind-html="artist.fullName | highlight: $select.search"></div>
+        </ui-select-choices>
+
+      </ui-select>
       <!-- End UI-select -->
 
     </div>
   </div>
-
-  <label for="artistdescription">Description:</label>
-  <textarea name="artistdescription" class="u-full-width" ng-model="vw.artist.description"></textarea>
-
-
+  <div class="row">
+    <label for="artistdescription">Description:</label>
+    <textarea name="artistdescription" class="u-full-width" ng-model="vw.artist.description"></textarea>
 
 
-  <input class="button-primary" type="submit" value="submit" ng-click="vw.updateArtist(vw.artist)">
+
+
+    <input class="button-primary" type="submit" value="submit" ng-click="vw.updateArtist(vw.artist)">
+  </div>
 </form>

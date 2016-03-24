@@ -87,7 +87,7 @@ angular.module('influences')
           edges.push({
             source: o,
             target: target,
-            d: width/20,
+            d: width/10,
             proteges: person.proteges
           })
         })
@@ -104,9 +104,11 @@ angular.module('influences')
                       })
                       .linkStrength(1)
                       .gravity(0)
-                      .friction(0.9)
-                      .charge(-1000)
-                      .start();
+                      .friction(0.5)
+                      // .call(force.drag)
+                      .charge(-350)
+
+      force.start();
 
         // Initialize links, nodes, and texts.
         var links = svg.selectAll('lines')
@@ -138,22 +140,23 @@ angular.module('influences')
                     .attr('y', function(d) { return center.y })
                     .text(function(d) { return d.name })
 
-
+        var animationStep = 800;
         // Update nodes, links, texts
         force.on('tick', function() {
           nodes
-            // .transition().ease("linear").duration(800)
+            // .transition().ease("linear").duration(animationStep)
             .attr('cx', function(d) { return d.x })
             .attr('cy', function(d) { return d.y })
 
           links
-            // .transition().ease("linear").duration(800)
+            // .transition().ease("linear").duration(animationStep)
             .attr('x1', function(d) { return d.source.x })
             .attr('x2', function(d) { return d.target.x })
             .attr('y1', function(d) { return d.source.y })
             .attr('y2', function(d) { return d.target.y })
 
           text
+            // .transition().ease("linear").duration(animationStep)
             .attr('x', function(d) { return d.x })
             .attr('y', function(d) { return d.y })
         })
