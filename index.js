@@ -43,13 +43,26 @@ app.get('/api/genre/random', genre.getRandomGenre);
 
 //Authentication
 app.post('/login',
-        passport.authenticate('local',
+        passport.authenticate('login',
         {failureRedirect: '/'}),
         function(req, res) {
         res.status(200).send(
           {message: 'ok',
           user: req.user });
   });
+
+app.post('/signup',
+  passport.authenticate('signup', {
+    failureRedirect: '/',
+  }),
+  function(req, res) {
+    res.status(200).send(
+      {
+        message: 'ok',
+        user: req.user
+      }
+    )}
+);
 
 app.post('/logout', function(req, res) {
   req.logout();

@@ -147,19 +147,44 @@ describe('userCtrl', () => {
     })
   });
 
-  it('should log in a valid user', (done) => {
-    chai.request(server)
-    .post('/login')
-    .send(
-      {
-        username: testUser1.get('username'),
-        password: testUser1.get('password'),
+  it.only('should log in a valid user', (done) => {
+    let user = makeFake.User()
+    let password = user.password;
+    user = User.forge(user);
+    user.set('password', user.generateHash(password))
+    user.save()
+    .then(() => {
+
+      chai.request(server)
+      .post('/login')
+      .send({
+        username: user.get('username'),
+        password: password
       })
+      .end((e, r) => {
+        if (e) throw e;
+
+        r.should.have.status(200)
+        r.should.have.property('body')
+        r.body.should.have.property('message')
+        r.body.message.should.equal('ok');
+        done();
+      })
+    })
+  })
+
+  it('should sign up a user', (done) => {
+    chai.request(server)
+    .post('/signup')
+    .send(makeFake.User())
     .end((e, r) => {
-      if (e) console.log(e);
 
       r.should.have.status(200)
+      r.body.should.be.a('object');
+      r.body.should.have.property('message');
+      r.body.message.should.equal('ok');
       done();
+
     })
   })
 });

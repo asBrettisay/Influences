@@ -1,3 +1,5 @@
+'use strict'
+
 const
   Faker = require('faker'),
   Artist = require('../../models/Artist'),
@@ -38,7 +40,10 @@ const _User = () => {
 };
 
 const UserAndSave = () => {
-  return new User(_User()).save();
+  let user = User.forge(_User());
+  
+
+  return user.save();
 }
 
 module.exports = {

@@ -4,25 +4,43 @@ const
  User = require('./models/User'),
  config = require('./_config.js');
 
-// Passport local strategy.
-passport.use(new Strategy(
+// Passport login strategy.
+passport.use('login', new Strategy(
   function(username, password, done) {
+    console.log('In passport login');
     User.forge({username: username}).fetch()
     .then((user) => {
-      user = user.toJSON();
       if (!user) {
         return done(null, false);
       }
-      if (user.password != password) {
+      if (!user.validatePassword(password)) {
         return done(null, false);
       };
-      return done(null, user);
+      console.log('User validated!');
+      return done(null, user.toJSON());
     })
     .catch((err) => {
       return done(err);
     })
   }
 ));
+
+passport.use('signup', new Strategy(
+  function(username, password, done) {
+    User.forge({username: username}).fetch()
+    .then((user) => {
+      if (user) return done(null, false);
+      else {
+        var newUser = User.forge({username: username})
+        newUser.set('password', newUser.generateHash(password))
+
+        newUser.save().then(() => {
+          return done(null, newUser.toJSON());
+        })
+      }
+    })
+  }
+))
 
 
 // Passport session persistence.
