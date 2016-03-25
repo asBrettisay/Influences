@@ -11,49 +11,9 @@ const express = require('express'),
       bookshelf = require('./bookshelf'),
       session = require('express-session'),
       config = require('./_config.js'),
-      passport = require('passport'),
+      passport = require('./passport'),
       Promise = require('bluebird'),
       Strategy = require('passport-local').Strategy;
-
-
-
-
-// Passport local strategy.
-passport.use(new Strategy(
-  function(username, password, done) {
-    User.forge({username: username}).fetch()
-    .then((user) => {
-      user = user.toJSON();
-      if (!user) {
-        return done(null, false);
-      }
-      if (user.password != password) {
-        return done(null, false);
-      };
-      return done(null, user);
-    })
-    .catch((err) => {
-      return done(err);
-    })
-  }
-));
-
-
-//Passport authenticated session persistence.
-passport.serializeUser(function(user, done) {
-  done(null, user);
-})
-
-
-passport.deserializeUser(function(id, done) {
-  User.forge({id: id}).fetch()
-  .then((user) => {
-    done(null, user);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-});
 
 
 // Initialize Express.
@@ -82,9 +42,13 @@ app.listen(port, () => {
 app.get('/api/genre/random', genre.getRandomGenre);
 
 //Authentication
-app.post('/login', passport.authenticate('local', {failureRedirect: '/'}),
-  function(req, res) {
-    res.status(200).send({message: 'ok', user: req.user });
+app.post('/login',
+        passport.authenticate('local',
+        {failureRedirect: '/'}),
+        function(req, res) {
+        res.status(200).send(
+          {message: 'ok',
+          user: req.user });
   });
 
 app.post('/logout', function(req, res) {
