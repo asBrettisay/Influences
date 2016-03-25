@@ -147,7 +147,7 @@ describe('userCtrl', () => {
     })
   });
 
-  it.only('should log in a valid user', (done) => {
+  it('should log in a valid user', (done) => {
     let user = makeFake.User()
     let password = user.password;
     user = User.forge(user);
