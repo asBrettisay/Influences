@@ -19,6 +19,10 @@ module.exports = {
   },
 
   showUser(req, res) {
+    if (req.params.id === 'current') {
+      return showCurrentUser(req, res);
+    }
+
     User.forge({id: req.params.id})
     .fetch()
     .then((user) => {
@@ -29,6 +33,7 @@ module.exports = {
       res.status(500).send(err);
     })
   },
+
 
   createUser(req, res) {
     User.forge(req.body).save()
@@ -67,3 +72,18 @@ module.exports = {
     })
   }
 };
+
+let showCurrentUser = function(req, res) {
+  if (!req.user) res.status(200).send();
+
+
+  User.forge({id: req.user.id}).fetch()
+  .then((user) => {
+    console.log(user)
+    res.status(200).json(user);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.status(500).send(err);
+  })
+}

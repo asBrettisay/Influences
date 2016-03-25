@@ -146,4 +146,20 @@ describe('userCtrl', () => {
       })
     })
   });
+
+  it('should log in a valid user', (done) => {
+    chai.request(server)
+    .post('/login')
+    .send(
+      {
+        username: testUser1.get('username'),
+        password: testUser1.get('password'),
+      })
+    .end((e, r) => {
+      if (e) console.log(e);
+
+      r.should.have.status(200)
+      done();
+    })
+  })
 });

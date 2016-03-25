@@ -11,13 +11,18 @@
     <!-- Select2 Css -->
     <!-- <link
     rel="stylesheet" href="./bower_components/select2/dist/css/select2.css" media="screen" title="no title" charset="utf-8"> -->
-
-
-
   </head>
-  <body>
 
-    <ui-view></ui-view>
+  
+  <body ng-controller="indexCtrl as index">
+    <div class="container">
+      <div class="menu-button"></div>
+      <div class="curtain" ng-if="index.menuActive"></div>
+
+      <div class="modal" ng-if="index.menuActive"></div>
+
+      <ui-view></ui-view>
+    </div>
 
     <!-- JQuery -->
     <script
@@ -51,11 +56,13 @@
     <script src="./main/controllers/mainCtrl.js" charset="utf-8"></script>
     <script src="./artist/controllers/artistCtrl.js" charset="utf-8"></script>
     <script src="./genre/controllers/genreCtrl.js" charset="utf-8"></script>
+    <script src="./indexCtrl.js" charset="utf-8"></script>
 
     <!-- Services -->
     <script src="./services/chartService.js" charset="utf-8"></script>
     <script src="./services/artistService.js" charset="utf-8"></script>
     <script src="./services/genreService.js" charset="utf-8"></script>
+    <script src="./services/userService.js" charset="utf-8"></script>
 
     <!-- Directives -->
     <script src="./directives/forceChart.js" charset="utf-8"></script>

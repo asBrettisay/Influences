@@ -18,3 +18,40 @@
 .block {
   display: block;
 }
+
+.curtain {
+  z-index: 2;
+  background-color: #000000;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.modal {
+  background-color: #FFF;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85vw;
+  /*height: 49vh;*/
+  z-index: 3;
+  border-radius: 10px;
+  opacity: 1;
+}
+
+.menu-button {
+  background:color: #fff;
+  position: absolute;
+  height: 60px;
+  width: 60px;
+  top: 10px;
+  right: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 13px 3px rgba(0,0,0,0.44);
+  -moz-box-shadow: 0px 0px 13px 3px rgba(0,0,0,0.44);
+  box-shadow: 0px 0px 13px 3px rgba(0,0,0,0.44);
+}

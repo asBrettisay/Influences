@@ -5,15 +5,74 @@ const express = require('express'),
       genre = require('./controllers/genreCtrl'),
       artist = require('./controllers/artistCtrl'),
       user = require('./controllers/userCtrl'),
+      User = require('./models/User'),
       Genre = require('./models/Genre'),
       Artist = require('./models/Artist'),
       bookshelf = require('./bookshelf'),
-      Promise = require('bluebird');
+      session = require('express-session'),
+      config = require('./_config.js'),
+      passport = require('passport'),
+      Promise = require('bluebird'),
+      Strategy = require('passport-local').Strategy;
 
+
+
+
+// Passport local strategy.
+passport.use(new Strategy(
+  function(username, password, done) {
+    User.forge({username: username}).fetch()
+    .then((user) => {
+      user = user.toJSON();
+      if (!user) {
+        return done(null, false);
+      }
+      if (user.password != password) {
+        return done(null, false);
+      };
+      return done(null, user);
+    })
+    .catch((err) => {
+      return done(err);
+    })
+  }
+));
+
+
+//Passport authenticated session persistence.
+passport.serializeUser(function(user, done) {
+  done(null, user);
+})
+
+
+passport.deserializeUser(function(id, done) {
+  User.forge({id: id}).fetch()
+  .then((user) => {
+    done(null, user);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+});
+
+
+// Initialize Express.
 var app = express();
 
+// Express middleware.
 app.use(bodyParser.json());
 app.use(express.static('public'));
+
+// Express session config.
+app.use(session({
+  secret: config.secret,
+  saveUninitialized: false,
+  resave: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 const port = 3000;
 app.listen(port, () => {
@@ -21,6 +80,18 @@ app.listen(port, () => {
 })
 
 app.get('/api/genre/random', genre.getRandomGenre);
+
+//Authentication
+app.post('/login', passport.authenticate('local', {failureRedirect: '/'}),
+  function(req, res) {
+    res.status(200).send({message: 'ok', user: req.user });
+  });
+
+app.post('/logout', function(req, res) {
+  req.logout();
+  req.session.destroy();
+  res.status(200).send('Logged out!');
+})
 
 //Genres.
 app.get('/api/genre/', genre.indexGenres);

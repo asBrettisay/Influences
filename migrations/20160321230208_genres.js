@@ -32,7 +32,7 @@ exports.up = function(knex, Promise) {
     table.string('lastName');
     table.text('bio');
     table.string('email');
-    table.string('passwordHash');
+    table.string('password');
   })
   .createTable('users_artists', function(table) {
     table.integer('user_id').references('users.id');

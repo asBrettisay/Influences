@@ -37,3 +37,4 @@ knexfile.js
 /test/test.sqlite3
 
 bower_components
+_config.js

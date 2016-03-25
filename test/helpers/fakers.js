@@ -33,7 +33,7 @@ const _User = () => {
     lastName: Faker.name.lastName(),
     bio: Faker.lorem.paragraph(),
     email: Faker.internet.email(),
-    passwordHash: Faker.internet.password()
+    password: Faker.internet.password()
   }
 };
 
