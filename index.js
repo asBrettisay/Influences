@@ -4,6 +4,7 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       genre = require('./controllers/genreCtrl'),
       artist = require('./controllers/artistCtrl'),
+      user = require('./controllers/userCtrl'),
       Genre = require('./models/Genre'),
       Artist = require('./models/Artist'),
       bookshelf = require('./bookshelf'),
@@ -21,18 +22,27 @@ app.listen(port, () => {
 
 app.get('/api/genre/random', genre.getRandomGenre);
 
+//Genres.
 app.get('/api/genre/', genre.indexGenres);
 app.get('/api/genre/:id', genre.showGenre);
-// Get a genre. Takes a genre id. Will collect each founder and their proteges.
+
 app.post('/api/genre/', genre.createGenre);
 app.put('/api/genre/:id', genre.updateGenre);
 app.delete('/api/genre/:id', genre.deleteGenre);
 
+//Artists.
 app.get('/api/artist/', artist.indexArtists);
 app.get('/api/artist/:id', artist.showArtist);
 app.post('/api/artist/', artist.createArtist);
 app.put('/api/artist/:id', artist.updateArtist);
 app.delete('/api/artist/:id', artist.deleteArtist);
+
+//Users.
+app.get('/api/users/', user.indexUsers);
+app.get('/api/users/:id', user.showUser);
+app.post('/api/users/', user.createUser);
+app.put('/api/users/:id', user.updateUser);
+app.delete('/api/users/:id', user.deleteUser);
 
 app.post('/api/seed/joins', function(req, res) {
 

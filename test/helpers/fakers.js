@@ -1,33 +1,51 @@
 const
   Faker = require('faker'),
-  Artist = require('../../models/Artist');
+  Artist = require('../../models/Artist'),
+  User = require('../../models/User');
 
-function makeFakeGenre() {
+const makeFakeGenre = () => {
   return {
     name: Faker.company.companyName()
   }
 }
 
-function makeFakeArtist() {
+const makeFakeArtist = () => {
   return {
     fullName: Faker.name.findName(),
   }
 }
 
-function artistAndSave() {
+const artistAndSave = () => {
   return new Artist(makeFakeArtist()).save()
 }
 
-function relationships(artist) {
+const relationships = (artist) => {
   artist.set('genre', []);
   artist.set('mentors', []);
   artist.set('proteges', []);
   return artist;
 }
 
+const _User = () => {
+  return {
+    username: Faker.internet.userName(),
+    firstName: Faker.name.firstName(),
+    lastName: Faker.name.lastName(),
+    bio: Faker.lorem.paragraph(),
+    email: Faker.internet.email(),
+    passwordHash: Faker.internet.password()
+  }
+};
+
+const UserAndSave = () => {
+  return new User(_User()).save();
+}
+
 module.exports = {
   Artist: makeFakeArtist,
   Genre: makeFakeGenre,
   artistAndSave: artistAndSave,
-  relationships: relationships
+  relationships: relationships,
+  User: _User,
+  UserAndSave: UserAndSave
 };

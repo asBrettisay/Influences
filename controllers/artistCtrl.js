@@ -4,37 +4,8 @@ const Bookshelf = require('../bookshelf'),
       Artist = require('../models/Artist'),
       Genre = require('../models/Genre');
 
-function getGenreByName(name) {
-  return Genre.where('name', name).fetch()
-}
 
-function resolveRelationships(artist, body) {
-  var genres = artist.related('genre');
-  var mentors = artist.related('mentors');
-  var proteges = artist.related('proteges');
 
-  return Promise.all([
-    genres.detach(byId(genres, body.genre)),
-    mentors.detach(byId(mentors, body.mentors)),
-    proteges.detach(byId(proteges, body.proteges))
-  ])
-}
-
-function byId(col, targets) {
-  if (!col) {
-    console.log('Col is undefined. targets is', targets);
-    return;
-  }
-  var out = col.map(function(item) {
-    for (var i = 0; i < targets.length; i++) {
-      if (item.id === targets[i].id) {
-        return targets[i].id;
-      }
-    }
-  });
-
-  return out;
-}
 
 module.exports = {
   indexArtists(req, res) {
@@ -135,7 +106,6 @@ module.exports = {
   deleteArtist(req, res) {
 
     let artist = Artist.forge({id: req.params.id})
-
     Promise.all([
       artist.founder().detach(),
       artist.genre().detach(),
@@ -153,3 +123,36 @@ module.exports = {
     })
   }
 };
+
+// Helper functions.
+function getGenreByName(name) {
+  return Genre.where('name', name).fetch()
+}
+
+function resolveRelationships(artist, body) {
+  var genres = artist.related('genre');
+  var mentors = artist.related('mentors');
+  var proteges = artist.related('proteges');
+
+  return Promise.all([
+    genres.detach(byId(genres, body.genre)),
+    mentors.detach(byId(mentors, body.mentors)),
+    proteges.detach(byId(proteges, body.proteges))
+  ])
+}
+
+function byId(col, targets) {
+  if (!col) {
+    console.log('Col is undefined. targets is', targets);
+    return;
+  }
+  var out = col.map(function(item) {
+    for (var i = 0; i < targets.length; i++) {
+      if (item.id === targets[i].id) {
+        return targets[i].id;
+      }
+    }
+  });
+
+  return out;
+}
