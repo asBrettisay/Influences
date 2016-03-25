@@ -70,20 +70,29 @@ module.exports = {
       console.log(err);
       res.status(500).send('Error deleting user', err);
     })
+  },
+
+  isAuth(req, res, next) {
+    if (req.user) {
+      next()
+    } else {
+      res.redirect('/login')
+    }
   }
 };
 
 let showCurrentUser = function(req, res) {
   if (!req.user) res.status(200).send();
 
-
-  User.forge({id: req.user.id}).fetch()
-  .then((user) => {
-    console.log(user)
-    res.status(200).json(user);
-  })
-  .catch((err) => {
-    console.log(err);
-    res.status(500).send(err);
-  })
+  else {
+    User.forge({id: req.user.id}).fetch()
+    .then((user) => {
+      console.log(user)
+      res.status(200).json(user);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send(err);
+    })
+  }
 }

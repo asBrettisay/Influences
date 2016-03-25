@@ -151,9 +151,16 @@ describe('userCtrl', () => {
     let user = makeFake.User()
     let password = user.password;
     user = User.forge(user);
-    user.set('password', user.generateHash(password))
-    user.save()
-    .then(() => {
+
+    var promise = new Promise(function(resolve, reject) {
+      user.generateHash(password, (err, _user) => {
+        resolve(_user.save());
+      })
+    })
+
+    promise
+    .then((user) => {
+
 
       chai.request(server)
       .post('/login')

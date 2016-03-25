@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "select2": "^4.0.2",
-    "ui-select": "angular-ui-select#^0.16.0"
+    "ui-select": "angular-ui-select#^0.16.0",
+    "bootstrap": "^3.3.6"
   }
 }

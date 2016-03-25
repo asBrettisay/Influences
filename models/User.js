@@ -1,6 +1,9 @@
+'use strict'
+
 const
   Bookshelf = require('../bookshelf'),
-  bcrypt = require('bcrypt-nodejs');
+  Promise = require('bluebird'),
+  bcrypt = require('bcrypt');
 
 require('./Artist');
 var user = Bookshelf.Model.extend({
@@ -8,11 +11,45 @@ var user = Bookshelf.Model.extend({
   artists: function() {
     this.belongsToMany('Artist')
   },
-  generateHash: function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+
+
+  generateHash: function(password, cb) {
+    var that = this;
+    return new Promise(function(resolve, reject) {
+      bcrypt.genSalt(8, function(err, salt) {
+        bcrypt.hash(password, salt, function(_err, hash) {
+          if (_err) {
+            err = _err;
+            reject(err);
+          }
+          that.set('password', hash);
+          if (cb) {
+            cb(err, that);
+          }
+          resolve(that);
+
+        })
+      })
+    })
   },
-  validatePassword: function(password) {
-    return bcrypt.compareSync(password, this.get('password'));
+
+
+  validatePassword: function(password, cb) {
+
+    let err, res;
+
+    bcrypt.compare(password, this.password, function(_err, _res) {
+      err = _err, res = _res;
+      if (cb) {
+        cb(err, res);
+      }
+
+    })
+    return Promise.resolve(res);
+
+    // return bcrypt.compareSync(password, this.get('password'), function(err, res) {
+    //   return res;
+    // });
   }
 });
 

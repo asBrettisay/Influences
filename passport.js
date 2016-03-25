@@ -7,17 +7,18 @@ const
 // Passport login strategy.
 passport.use('login', new Strategy(
   function(username, password, done) {
-    console.log('In passport login');
     User.forge({username: username}).fetch()
     .then((user) => {
       if (!user) {
         return done(null, false);
       }
-      if (!user.validatePassword(password)) {
-        return done(null, false);
-      };
-      console.log('User validated!');
-      return done(null, user.toJSON());
+
+      user.validatePassword(password).then((res) => {
+        if (!user.validatePassword(password)) {
+          return done(null, false);
+        };
+        return done(null, user.toJSON());
+      })
     })
     .catch((err) => {
       return done(err);
@@ -32,9 +33,12 @@ passport.use('signup', new Strategy(
       if (user) return done(null, false);
       else {
         var newUser = User.forge({username: username})
-        newUser.set('password', newUser.generateHash(password))
 
-        newUser.save().then(() => {
+        newUser.generateHash(password)
+        .then((user) => {
+          return user.save()
+        })
+        .then(() => {
           return done(null, newUser.toJSON());
         })
       }
