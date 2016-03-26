@@ -16,8 +16,15 @@
 
 
   <body ng-controller="indexCtrl as index">
-    <div class="curtain" ng-if="index.active.modal"></div>
-    <div class="modal" ng-if="index.active.modal">
+    <div
+    class="curtain"
+    ng-if="index.active.modal"
+    ng-click="index.active.modal = !index.active.modal"
+
+    ></div>
+    <div class="modal"
+    ng-if="index.active.modal"
+    >
       <div
       login-modal
       ng-if="index.active.login"

@@ -109,6 +109,7 @@ angular.module('influences')
                       // .call(force.drag)
                       .charge(-350)
 
+
       force.start();
 
         // Initialize links, nodes, and texts.
@@ -123,6 +124,7 @@ angular.module('influences')
 
         var nodes = svg.selectAll('nodes')
                        .data(nodeData)
+                      //  .call(force.drag)
                        .enter().append('circle')
                        .attr('class', 'node')
                        .attr('r', width/100)
