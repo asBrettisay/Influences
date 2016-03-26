@@ -36,11 +36,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 85vw;
-  /*height: 49vh;*/
+  width: 20vw;
+  height: 49vh;
   z-index: 3;
   border-radius: 10px;
   opacity: 1;
+  display: block;
 }
 
 .menuButtonContainer {
@@ -53,11 +54,55 @@
   text-align: center;
 }
 
-.menuButtonContainer:hover {
+.menuButtonContainerHover {
   background-color: #dbdbdb;
+}
+
+.menuButtonContainerActive {
+  background-color: #000;
+  color: #fff;
+  -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
 }
 
 .main-menu-button {
   position: absolute;
   top: 25px;
+}
+
+.main-menu {
+  position: relative;
+  border: 1px solid black;
+  width: 150px;
+  padding: 10px;
+  z-index: 1;
+  background-color: #fff;
+}
+
+.main-menu ul {
+  margin: 0;
+  list-style: none;
+}
+
+.main-menu li {
+  cursor: pointer;
+}
+
+.menu-item-hover {
+  background-color: #dbdbdb;
+}
+
+.activeUser {
+  position: absolute;
+  top: 25px;
+  right: 0;
+}
+
+.top-margin {
+  margin-top: 20px;
+}
+
+.artist-genre-list {
+  font-style: italic;
 }

@@ -1,0 +1,25 @@
+<div class="main-menu-button">
+  <div ng-click="menuActive = !menuActive"
+  ng-class="{menuButtonContainerActive: menuActive}"
+  class="icon-bars menuButtonContainer">
+  </div>
+  <div ng-if="menuActive" class="main-menu">
+    <ul>
+      <li menu-item
+      ui-sref="main">
+        Home
+      </li>
+      <li menu-item
+      ng-if="currentUser"
+      ui-sref="profile"
+      >Profile</li>
+      <li menu-item ng-if="currentUser">Log Out</li>
+      <li menu-item ng-if="!currentUser"
+      ng-click="activateModal('login')">Log In</li>
+      <li menu-item
+      ng-if="!currentUser"
+      ng-click="activateModal('signup')"
+      >Sign Up</li>
+    </ul>
+  </div>
+</div>

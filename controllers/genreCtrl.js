@@ -111,19 +111,16 @@ module.exports = {
     })
   },
 
-  getRandomGenre(req, res) {
+  getRandomGenre(req, res, next) {
+    console.log('Going to get random genre');
     Genre.forge().fetchAll()
     .then((genres) => {
-      var num = (genres.length === 1) ? 1 : Math.floor(Math.random() * genres.length);
-      return Genre.forge({id: num})
-      .fetch({
-        withRelated: [
-          'founders'
-        ]
-      })
-    .then((genre) => {
-      res.status(200).json(genre);
-      })
+
+      return genres.query({where: {id: 2}}).fetchOne({columns: 'id'})
+    })
+    .then((num) => {
+
+      res.status(200).json({id: num.get('id')})
     })
   }
 };

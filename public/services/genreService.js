@@ -1,17 +1,14 @@
 angular.module('influences')
-.service('genreService', function($http) {
+.service('genreService', function($http, $state) {
   this.getRandomGenre = function() {
+    console.log('Going to get random genre...');
     return $http({
       method: 'GET',
       url: '/api/genre/random'
     })
-    .then(function(res) {
-      if (res.status === 200) {
-        return res.data;
-      }
-    })
-    .catch(function(err) {
-      throw err;
+    .success(function(res) {
+      console.log('Going to genre id', res);
+      $state.go('genre', {id: res.id});
     })
   },
 

@@ -20,11 +20,14 @@ module.exports = {
 
   showUser(req, res) {
     if (req.params.id === 'current') {
+      console.log('getting current user...')
       return showCurrentUser(req, res);
     }
 
     User.forge({id: req.params.id})
-    .fetch()
+    .fetch({
+      columns: ['id', 'username', 'firstName', 'lastName', 'bio', 'email']
+    })
     .then((user) => {
       res.status(200).json(user);
     })
@@ -47,8 +50,9 @@ module.exports = {
   },
 
   updateUser(req, res) {
-    User.forge({id: req.params.id})
-    .save(req.body, {patch: true})
+    let user = User.forge({id: req.params.id})
+
+    user.save(req.body, {patch: true})
     .then((user) => {
       res.status(200).json(user);
     })
@@ -85,9 +89,10 @@ let showCurrentUser = function(req, res) {
   if (!req.user) res.status(200).send();
 
   else {
+    console.log('Current user from userCtrl', req.user);
     User.forge({id: req.user.id}).fetch()
     .then((user) => {
-      console.log(user)
+      console.log('User from db is', user.toJSON())
       res.status(200).json(user);
     })
     .catch((err) => {

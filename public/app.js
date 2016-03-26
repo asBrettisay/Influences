@@ -1,8 +1,10 @@
 'use strict'
 
-angular.module('influences', ['ui.router',
+angular.module('influences', [
+                              'ui.router',
                               'ui.select',
-                              'ngSanitize'])
+                              'ngSanitize'
+                            ])
 .config(function($stateProvider, $urlRouterProvider) {
   // $urlRouterProvider.otherwise('/main')
 
@@ -59,6 +61,14 @@ angular.module('influences', ['ui.router',
       controller: 'newArtistCtrl',
       controllerAs: 'vw',
     })
+    .state('profile', {
+      url: '/user/profile',
+      templateUrl: './user/views/profile.html',
+      controller: 'userProfileCtrl',
+      controllerAs: 'vw'
+    })
+
+
 })
 .filter('propsFilter', function() {
   return function(items, props) {

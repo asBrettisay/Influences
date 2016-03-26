@@ -22,12 +22,10 @@ var user = Bookshelf.Model.extend({
             err = _err;
             reject(err);
           }
-          that.set('password', hash);
           if (cb) {
-            cb(err, that);
+            cb(err, hash);
           }
-          resolve(that);
-
+          resolve(hash);
         })
       })
     })

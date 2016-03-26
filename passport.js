@@ -35,8 +35,8 @@ passport.use('signup', new Strategy(
         var newUser = User.forge({username: username})
 
         newUser.generateHash(password)
-        .then((user) => {
-          return user.save()
+        .then((hash) => {
+          return newUser.save({password: hash})
         })
         .then(() => {
           return done(null, newUser.toJSON());
@@ -49,13 +49,13 @@ passport.use('signup', new Strategy(
 
 // Passport session persistence.
 passport.serializeUser(function(user, done) {
-  done(null, user);
+  done(null, user.id);
 })
 
 passport.deserializeUser(function(id, done) {
   User.forge({id: id}).fetch()
   .then((user) => {
-    done(null, user);
+    done(null, user.toJSON());
   })
   .catch((err) => {
     console.log(err);

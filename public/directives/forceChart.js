@@ -77,7 +77,8 @@ angular.module('influences')
             name: person.fullName,
             x: center.x,
             y: center.y,
-            proteges: person.proteges
+            proteges: person.proteges,
+            id: person.id
           };
 
           if (person.proteges) { sortProteges(person, o) }
@@ -128,6 +129,7 @@ angular.module('influences')
                        .attr('cx', function(d) { return center.x })
                        .attr('cy', function(d) { return center.y })
                        .on('click', function(d) {
+                         console.log('Clicked', d);
                          $state.go('artist.show', {id: d.id})
                        })
 

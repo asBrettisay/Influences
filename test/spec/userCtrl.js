@@ -153,8 +153,8 @@ describe('userCtrl', () => {
     user = User.forge(user);
 
     var promise = new Promise(function(resolve, reject) {
-      user.generateHash(password, (err, _user) => {
-        resolve(_user.save());
+      user.generateHash(password, (err, hash) => {
+        resolve(user.save({password: hash}));
       })
     })
 

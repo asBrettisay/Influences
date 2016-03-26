@@ -27,7 +27,7 @@ app.use(express.static('public'));
 app.use(session({
   secret: config.secret,
   saveUninitialized: false,
-  resave: false
+  resave: true
 }));
 
 app.use(passport.initialize());
@@ -47,8 +47,10 @@ app.post('/login',
         {failureRedirect: '/'}),
         function(req, res) {
         res.status(200).send(
-          {message: 'ok',
-          user: req.user });
+          {
+            message: 'ok',
+            user: req.user
+          });
   });
 
 app.post('/signup',

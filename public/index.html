@@ -12,21 +12,36 @@
     <link rel="stylesheet" href="./style/main.css" media="screen" title="no title" charset="utf-8">
     <link href="./bower_components/ui-select/dist/select.css" rel="stylesheet" />
 
-    <!-- Semantic -->
-    <link rel="stylesheet" href="/semantic/master.css" media="screen" title="no title" charset="utf-8">
-    <!-- Select2 Css -->
-    <!-- <link
-    rel="stylesheet" href="./bower_components/select2/dist/css/select2.css" media="screen" title="no title" charset="utf-8"> -->
   </head>
 
 
   <body ng-controller="indexCtrl as index">
+    <div class="curtain" ng-if="index.active.modal"></div>
+    <div class="modal" ng-if="index.active.modal">
+      <div
+      login-modal
+      ng-if="index.active.login"
+      class="container top-margin">
+      </div>
+      <div
+      signup-modal
+      ng-if="index.active.signup"
+      class="container top-margin">
+      </div>
+    </div>
 
     <div class="container">
-      <div class="curtain" ng-if="index.menuActive"></div>
-      <div class="modal" ng-if="index.menuActive"></div>
 
-      <menu-button></menu-button>
+
+
+
+      <dropdown-menu current-user ="index.currentUser"></dropdown-menu>
+
+      <div class="activeUser" ng-if="index.currentUser">
+        <a ui-sref="profile">
+          <div class="icon-torso">{{index.currentUser.username}}</div>
+        </a>
+      </div>
 
 
       <ui-view></ui-view>
@@ -73,6 +88,7 @@
     <script src="./artist/controllers/artistCtrl.js" charset="utf-8"></script>
     <script src="./genre/controllers/genreCtrl.js" charset="utf-8"></script>
     <script src="./indexCtrl.js" charset="utf-8"></script>
+    <script src="./user/controllers/userProfileCtrl.js" charset="utf-8"></script>
 
     <!-- Services -->
     <script src="./services/chartService.js" charset="utf-8"></script>
@@ -82,7 +98,10 @@
 
     <!-- Directives -->
     <script src="./directives/forceChart.js" charset="utf-8"></script>
-    <script src="./directives/menuButton.js" charset="utf-8"></script>
+    <script src="./directives/dropdownMenu.js" charset="utf-8"></script>
+    <script src="./directives/menuItem.js" charset="utf-8"></script>
+    <script src="./directives/loginModal.js" charset="utf-8"></script>
+    <script src="./directives/signupModal.js" charset="utf-8"></script>
 
 
 

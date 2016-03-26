@@ -1,2 +1,6 @@
+<h5 class="artist-genre-list">
+  <span ng-repeat="genre in vw.artist.genre">{{genre.name}}{{$last ? '' : ', '}}</span>
+</h5>
 <p>{{vw.artist.description}}</p>
+
 <button ui-sref="artist.edit">Edit Artist</button>
