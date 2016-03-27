@@ -37,7 +37,20 @@ angular.module('influences')
       url: '/api/users/' + user.id
     })
     .success(function(res) {
-      return res.data;
+      return res;
+    })
+    .error(function(err) {
+      console.log(err);
+    })
+  }
+
+  this.logoutUser = function() {
+    return $http({
+      method: 'POST',
+      url: '/logout',
+    })
+    .success(function(res) {
+      return res;
     })
     .error(function(err) {
       console.log(err);

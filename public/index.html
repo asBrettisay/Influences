@@ -42,9 +42,9 @@
 
 
 
-      <dropdown-menu current-user ="index.currentUser"></dropdown-menu>
+      <dropdown-menu current-user="index.currentUser"></dropdown-menu>
 
-      <div class="activeUser" ng-if="index.currentUser">
+      <div class="activeUser" ng-if="index.currentUser" id="user-icon">
         <a ui-sref="profile">
           <div class="icon-torso">{{index.currentUser.username}}</div>
         </a>
@@ -96,6 +96,8 @@
     <script src="./genre/controllers/genreCtrl.js" charset="utf-8"></script>
     <script src="./indexCtrl.js" charset="utf-8"></script>
     <script src="./user/controllers/userProfileCtrl.js" charset="utf-8"></script>
+    <script src="./newArtist/controllers/newArtistCtrl.js" charset="utf-8"></script>
+    <script src="./admin/controllers/adminCtrl.js" charset="utf-8"></script>
 
     <!-- Services -->
     <script src="./services/chartService.js" charset="utf-8"></script>

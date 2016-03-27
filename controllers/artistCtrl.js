@@ -34,26 +34,30 @@ module.exports = {
 
   createArtist(req, res) {
 
-    var genreId, artist
-    getGenreByName(req.body.genre)
-    .then((genre) => {
-      genreId = genre.id;
-
-      delete req.body.genre;
-
-      return Artist.forge(req.body).save()
-    })
+    let artist;
+    let joins = {
+      genre: req.body.genre,
+      proteges: req.body.proteges,
+      mentors: req.body.mentors
+    };
+    delete req.body.genre
+    delete req.body.proteges
+    delete req.body.mentors;
+    console.log('Req body before save', req.body);
+    Artist.forge(req.body).save()
     .then((_artist) => {
       artist = _artist;
-      return artist.genre().attach(genreId)
+      return artist.attacher(joins);
     })
-    .then(() => {
-      res.status(200).send(artist);
+    .then((result) => {
+      res.status(200).json(artist);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send(err);
+      res.sendStatus(500);
     })
+
+
   },
 
   updateArtist(req, res) {
@@ -66,8 +70,7 @@ module.exports = {
     })
     .then((_artist) => {
       artist = _artist;
-
-      return resolveRelationships(artist, req.body)
+      return artist.attacher(req.body)
     })
     .then(() => {
 
@@ -125,34 +128,48 @@ module.exports = {
 };
 
 // Helper functions.
-function getGenreByName(name) {
-  return Genre.where('name', name).fetch()
-}
+function getGenresByName(targets) {
 
-function resolveRelationships(artist, body) {
-  var genres = artist.related('genre');
-  var mentors = artist.related('mentors');
-  var proteges = artist.related('proteges');
-
-  return Promise.all([
-    genres.detach(byId(genres, body.genre)),
-    mentors.detach(byId(mentors, body.mentors)),
-    proteges.detach(byId(proteges, body.proteges))
-  ])
-}
-
-function byId(col, targets) {
-  if (!col) {
-    console.log('Col is undefined. targets is', targets);
-    return;
-  }
-  var out = col.map(function(item) {
-    for (var i = 0; i < targets.length; i++) {
-      if (item.id === targets[i].id) {
-        return targets[i].id;
+  let ans;
+  return Genre.fetchAll()
+  .then((genres) => {
+    genres = genres.toJSON()
+    ans = genres.filter(function(genre) {
+      for (var i = 0; i < targets.length; i++) {
+        return genre.name === targets[i].name
       }
-    }
-  });
-
-  return out;
+    })
+    .map(function(genre) {
+      return genre.id;
+    })
+    return ans;
+  })
 }
+
+// function resolveRelationships(artist, body, action) {
+//   var genres = artist.related('genre');
+//   var mentors = artist.related('mentors');
+//   var proteges = artist.related('proteges');
+//
+//   return Promise.all([
+//     genres[action](byId(genres, body.genre)),
+//     mentors[action](byId(mentors, body.mentors)),
+//     proteges[action](byId(proteges, body.proteges))
+//   ])
+// }
+//
+// function byId(col, targets) {
+//   if (!col) {
+//     console.log('Col is undefined. targets is', targets);
+//     return;
+//   }
+//   var out = col.map(function(item) {
+//     for (var i = 0; i < targets.length; i++) {
+//       if (item.id === targets[i].id) {
+//         return targets[i].id;
+//       }
+//     }
+//   });
+//
+//   return out;
+// }

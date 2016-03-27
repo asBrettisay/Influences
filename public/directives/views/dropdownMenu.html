@@ -1,7 +1,8 @@
 <div class="main-menu-button">
   <div ng-click="menuActive = !menuActive"
   ng-class="{menuButtonContainerActive: menuActive}"
-  class="icon-bars menuButtonContainer">
+  class="icon-bars menuButtonContainer"
+  id="main-menu-button">
   </div>
   <div ng-if="menuActive" class="main-menu">
     <ul>
@@ -9,17 +10,45 @@
       ui-sref="main">
         Home
       </li>
+
       <li menu-item
       ng-if="currentUser"
       ui-sref="profile"
-      >Profile</li>
-      <li menu-item ng-if="currentUser">Log Out</li>
+      >Profile
+      </li>
+
+      <li
+      menu-item
+      ng-if="currentUser"
+      ui-sref="newArtist"
+      id="menu-new-artist">
+        New Artist
+      </li>
+
+      <li
+      menu-item
+      ng-if="currentUser"
+      ng-click="logoutUser()">
+        Log Out
+      </li>
+
       <li menu-item ng-if="!currentUser"
-      ng-click="activateModal('login')">Log In</li>
+      ng-click="activateModal('login')"
+      id="menu-log-in">
+        Log In
+      </li>
+
       <li menu-item
       ng-if="!currentUser"
-      ng-click="activateModal('signup')"
-      >Sign Up</li>
+      ng-click="activateModal('signup')">
+        Sign Up
+      </li>
+
+      <li
+      menu-item
+      ui-sref="admin">
+      Admin
+      </li>
     </ul>
   </div>
 </div>

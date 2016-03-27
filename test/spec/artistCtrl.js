@@ -124,7 +124,7 @@ describe('artistCtrl', () => {
   });
   it('should create an artist with existing genre', (done) => {
     var newArtist = makeFake.Artist();
-    newArtist.genre = testGenre.get('name');
+    newArtist.genre = [testGenre.toJSON()];
     chai.request(server)
     .post('/api/artist/')
     .send(newArtist)
@@ -148,6 +148,8 @@ describe('artistCtrl', () => {
       })
     })
   });
+
+
   it('should update one artist', (done) => {
     testArtist.genre = [testGenre];
     chai.request(server)

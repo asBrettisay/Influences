@@ -14,6 +14,7 @@ const makeFakeGenre = () => {
 const makeFakeArtist = () => {
   return {
     fullName: Faker.name.findName(),
+    description: Faker.lorem.paragraph()
   }
 }
 
@@ -41,7 +42,7 @@ const _User = () => {
 
 const UserAndSave = () => {
   let user = User.forge(_User());
-  
+
 
   return user.save();
 }

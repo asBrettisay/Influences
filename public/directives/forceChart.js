@@ -16,7 +16,7 @@ angular.module('influences')
       var d3 = scope.window.d3;
       var svg = d3.select(elem.find("svg")[0]);
       var center = {
-        x: width/2,
+        x: width/3,
         y: height/3
       }
 

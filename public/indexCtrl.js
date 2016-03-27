@@ -32,7 +32,6 @@ angular.module('influences')
       console.log(that.currentUser)
     });
   }.bind(this))
-  console.log('This outside listenter is', this);
 
   console.log('Current user is', this.currentUser);
 })

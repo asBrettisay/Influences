@@ -6,7 +6,7 @@ angular.module('influences', [
                               'ngSanitize'
                             ])
 .config(function($stateProvider, $urlRouterProvider) {
-  // $urlRouterProvider.otherwise('/main')
+  $urlRouterProvider.otherwise('/main')
 
   $stateProvider
     .state('main', {
@@ -60,12 +60,40 @@ angular.module('influences', [
       templateUrl: './newArtist/views/artist.html',
       controller: 'newArtistCtrl',
       controllerAs: 'vw',
+      resolve: {
+        allArtists: function(artistService) {
+          return artistService.getAllArtists();
+        },
+        allGenres: function(genreService) {
+          return genreService.getAllGenres();
+        }
+      }
     })
     .state('profile', {
       url: '/user/profile',
       templateUrl: './user/views/profile.html',
       controller: 'userProfileCtrl',
       controllerAs: 'vw'
+    })
+    .state('admin', {
+      url: '/admin/',
+      templateUrl: './admin/views/admin.html',
+      controller: 'adminCtrl',
+      controllerAs: 'vw',
+      resolve: {
+        artistsList: function(artistService) {
+          return artistService.getAllArtists();
+        },
+        genresList: function(genreService) {
+          return genreService.getAllGenres();
+        }
+      }
+    })
+    .state('admin.artist', {
+      templateUrl: './admin/views/artist.html'
+    })
+    .state('admin.genres', {
+      templateUrl: './admin/views/genres.html'
     })
 
 

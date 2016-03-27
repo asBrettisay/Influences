@@ -1,19 +1,6 @@
 angular.module('influences')
 .service('artistService', function($http) {
-  // this.getArtist = function(id) {
-  //   return {
-  //     name: 'Louie Armstrong',
-  //     description: 'Louis Armstrong (August 4, 1901 – July 6, 1971), nicknamed Satchmo or Pops, was an African American jazz trumpeter, composer and singer who became one of the pivotal and most influential figures in jazz music. His career spanned five decades, from the 1920s to the 1960s, and different eras in jazz.',
-  //     proteges: [
-  //       {
-  //         name: 'Duke Ellington'
-  //       },
-  //       {
-  //         name: 'Bing Crosby'
-  //       }
-  //     ]
-  //   }
-  // }
+
 
   this.getArtist = function(id) {
     return $http({
@@ -40,6 +27,28 @@ angular.module('influences')
     return $http({
       method: 'GET',
       url: '/api/artist/',
+    })
+    .then(function(res) {
+      return res.data;
+    })
+  }
+
+  this.createArtist = function(artist) {
+    return $http({
+      method: 'POST',
+      data: artist,
+      url: '/api/artist/'
+    })
+    .then(function(artist) {
+      console.log('Artist in artistService', artist);
+      return artist.data;
+    })
+  }
+
+  this.deleteArtist = function(artist) {
+    return $http({
+      method: "DELETE",
+      url: '/api/artist/' + artist.id
     })
     .then(function(res) {
       return res.data;

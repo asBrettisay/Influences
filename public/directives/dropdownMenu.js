@@ -6,11 +6,21 @@ angular.module('influences')
     scope: {
       currentUser: '='
     },
-    controller: function($scope) {
+    controller: function($scope, userService, $state) {
       $scope.activateModal = function(modalType) {
         $scope.$emit('activateModal', modalType);
         $scope.menuActive = false;
+      };
+
+      $scope.logoutUser = function() {
+        userService.logoutUser()
+        $scope.menuActive = false;
+        $state.go('main');
       }
+
+      $scope.$on('close menu', function() {
+        $scope.menuActive = false;
+      })
 
     },
     link: function(scope, elem, attrs) {

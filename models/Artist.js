@@ -33,7 +33,55 @@ var artist = Bookshelf.Model.extend({
       'protege_id',
       'mentor_id'
     );
+  },
+
+
+  attacher: function(body) {
+    return Promise.all([
+      this.genre().attach(idMap(body.genre)),
+      this.proteges().attach(idMap(body.proteges || [])),
+      this.mentors().attach(idMap(body.mentors || []))
+    ])
+  },
+
+  detacher: function(body) {
+    return resolveRelationships.call(this, body, 'detach')
   }
+
 });
+
+
+function resolveRelationships(body, action) {
+  var genres = this.related('genre');
+  var mentors = this.related('mentors');
+  var proteges = this.related('proteges');
+
+  return Promise.all([
+    genres[action](byId(genres, body.genre || [])),
+    mentors[action](byId(mentors, body.mentors || [])),
+    proteges[action](byId(proteges, body.proteges || []))
+  ])
+}
+
+function idMap(col) {
+  return col.map(function(i) {
+    return i.id;
+  })
+}
+
+function byId(col, targets) {
+  if (!col) {
+    return;
+  }
+  var out = col.map(function(item) {
+    for (var i = 0; i < targets.length; i++) {
+      if (item.id === targets[i].id) {
+        return targets[i].id;
+      }
+    }
+  });
+  console.log('outs this round', out);
+  return out;
+}
 
 module.exports = Bookshelf.model('Artist', artist);

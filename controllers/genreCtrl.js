@@ -4,16 +4,48 @@ const Bookshelf = require('../bookshelf'),
       Artist = require('../models/Artist'),
       Genre = require('../models/Genre');
 
-function gatherArtists(model) {
-  var founders = model.related('founders')
-                  .fetch({
-                    withRelated: [
-                      'proteges'
-                    ]
-                  })
 
-  return Promise.resolve(founders);
+
+
+
+function generateTree(genre) {
+  return genre.fetch({withRelated: ['founders']})
+  .then((genre) => {
+
+    let promises = [];
+    // Get each founders proteges.
+    genre.related('founders').each(function(artist) {
+      promises.push(artist.fetch({withRelated: ['proteges']}));
+    })
+
+    return Promise.all(promises).then(function(artists) {
+      let promises = [];
+      //Add protege proteges.
+      artists.forEach(function(artist) {
+        promises.push(addGeneration(artist));
+      })
+      return Promise.all(promises).then(function(artists) {
+        return genre;
+      });
+    });
+  })
 }
+
+function addGeneration(artist) {
+  let promises = [];
+  artist.related('proteges').each(function(p) {
+    promises.push(p.fetch({withRelated:['proteges']}));
+  })
+  return Promise.all(promises).then(function(artists) {
+    let promises = [];
+    artists.forEach(function(a){
+      return addGeneration(a);
+    })
+    return Promise.all(promises)
+  });
+}
+
+
 
 module.exports = {
   indexGenres(req, res, next) {
@@ -36,13 +68,9 @@ module.exports = {
       ]
     })
     .then((result) => {
-      return Promise.all([
-        gatherArtists(result),
-        result
-      ])
+      return generateTree(result);
     })
-    .spread((artists, genre) => {
-      genre.founders = artists;
+    .then((genre) => {
 
       res.status(200).json(genre);
     })

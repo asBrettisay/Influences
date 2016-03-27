@@ -10,6 +10,10 @@ angular.module('influences')
       elem.on('mouseleave', function() {
         elem.toggleClass('menu-item-hover')
       })
+
+      elem.on('click', function() {
+        scope.$emit('close menu');
+      })
     }
   }
 })

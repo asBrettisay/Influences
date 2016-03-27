@@ -1,0 +1,12 @@
+<h5>Artists</h5>
+<div ng-repeat="artist in vw.artistsList">
+  {{artist.fullName}}
+  <span
+  class="icon-pencil"
+  ui-sref="artist.edit({id: artist.id})"
+  ></span>
+
+  <span
+  class="icon-trash"
+  ng-click="vw.deleteArtist(artist)"
+</div>

@@ -1,0 +1,87 @@
+<div class="container top-margin">
+  <h3>Create a new artist</h3>
+  <form
+  ng-submit="vw.createArtist(vw.artist)"
+  >
+    <div class="row">
+      <div class="six columns">
+        <label for="nameInput">Artist Name:</label>
+        <input
+        class="u-full-width"
+        type="text"
+        ng-model="vw.artist.fullName"
+        placeholder="Artist Name">
+      </div>
+      <div class="six columns">
+      <!-- UI-Selects -->
+
+        <!-- Select Related Genre -->
+        <label>Select genre(s):</label>
+        <ui-select multiple
+        ng-model="vw.artist.genre"
+        >
+          <ui-select-match
+          placeholder="Select genre..."
+          >
+            {{$item.name}}
+          </ui-select-match>
+          <ui-select-choices
+          repeat="genre in vw.genreList">
+            <span ng-bind="genre.name"></span>
+          </ui-select-choices>
+        </ui-select>
+
+        <!-- Select Related Artists -->
+        <label>Select Influences</label>
+        <ui-select multiple
+        ng-model="vw.artist.mentors"
+        >
+          <ui-select-match
+          placeholder="Select this artists influences"
+          >
+            {{$item.fullName}}
+          </ui-select-match>
+          <ui-select-choices
+          repeat = "artist in vw.artistList"
+          >
+            <span ng-bind="artist.fullName"></span>
+          </ui-select-choices>
+        </ui-select>
+
+        <!-- Select Protege Artists -->
+        <label>Select Proteges</label>
+        <ui-select multiple
+        ng-model="vw.artist.proteges"
+        >
+          <ui-select-match placeholder="Select proteges of this artist">
+            {{$item.fullName}}
+          </ui-select-match>
+          <ui-select-choices
+            group-by="vw.groupArtists"
+            repeat="artist in vw.artistList | propsFilter: {fullName: $select.search}"
+            >
+            <div ng-bind-html="artist.fullName | highlight: $select.search"></div>
+          </ui-select-choices>
+
+        </ui-select>
+        <!-- End UI-select -->
+
+      </div>
+    </div>
+    <div class="row">
+      <label for="artistdescription">Description:</label>
+      <textarea
+      name="artistdescription"
+      class="u-full-width"
+      ng-model="vw.artist.description"
+      placeholder="Enter information about the artist..."></textarea>
+
+
+
+
+      <input class="button-primary" type="submit" value="submit" id="new-artist-submit">
+    </div>
+  </form>
+
+
+</div>
