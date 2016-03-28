@@ -46,11 +46,11 @@
 
 .menuButtonContainer {
   background-color: #FFF;
-  height: 60px;
-  width: 60px;
+  height: 40px;
+  width: 40px;
   border-radius: 10px;
-  border: 1px solid black;
-  font-size: 45px;
+  border: 1px solid #dbdbdb;
+  font-size: 30px;
   text-align: center;
 }
 
@@ -73,11 +73,16 @@
 
 .main-menu {
   position: relative;
-  border: 1px solid black;
+  border: 1px solid #dbdbdb;
   width: 150px;
   padding: 10px;
   z-index: 1;
   background-color: #fff;
+  border-radius: 10px;
+  transform: translate(-10px, 13px);
+  -webkit-box-shadow: 0px 10px 40px -8px rgba(112,112,112,1);
+  -moz-box-shadow: 0px 10px 40px -8px rgba(112,112,112,1);
+  box-shadow: 0px 10px 40px -8px rgba(112,112,112,1);
 }
 
 .main-menu ul {
@@ -113,4 +118,25 @@
 
 .right-margin {
   margin-right: 25px;
+}
+
+.arrow-up {
+  height: 0;
+  width: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid #fff;
+  transform: translate(3px, -22px);
+  position: absolute;
+  z-index: 1;
+}
+
+.arrow-up-border {
+  height: 0;
+  width: 0;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
+  border-bottom: 13px solid #dbdbdb;
+  transform: translate(2px, -23px);
+  position: absolute;
 }
