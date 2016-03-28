@@ -22,6 +22,7 @@ angular.module('influences')
         $scope.menuActive = false;
       })
 
+
     },
     link: function(scope, elem, attrs) {
       var menuButton = elem.find('div.menuButtonContainer');
