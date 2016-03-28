@@ -43,7 +43,6 @@ module.exports = {
     delete req.body.genre
     delete req.body.proteges
     delete req.body.mentors;
-    console.log('Req body before save', req.body);
     Artist.forge(req.body).save()
     .then((_artist) => {
       artist = _artist;
@@ -62,6 +61,16 @@ module.exports = {
 
   updateArtist(req, res) {
     let artist;
+
+    let joins = {
+      mentors: req.body.mentors,
+      proteges: req.body.proteges,
+      genres: req.body.genres
+    }
+    delete req.body.mentors;
+    delete req.body.proteges;
+    delete req.body.genre;
+
     Artist.forge({id: req.params.id})
     .fetch({
       withRelated: [
@@ -70,34 +79,13 @@ module.exports = {
     })
     .then((_artist) => {
       artist = _artist;
-      return artist.attacher(req.body)
+      return Promise.all([
+        artist.attacher(joins),
+        artist.detacher(joins),
+        artist.save(req.body)
+      ]);
     })
     .then(() => {
-
-      let gIds = req.body.genre.map(function(g) {
-        return g.id;
-      })
-
-      let mIds = req.body.mentors.map(function(m) {
-        return m.id;
-      })
-
-      let pIds = req.body.proteges.map(function(p) {
-        return p.id;
-      })
-
-      delete req.body.genre;
-      delete req.body.mentors;
-      delete req.body.proteges;
-
-      let genreP = artist.genre().attach(gIds),
-          mentorP = artist.mentors().attach(mIds),
-          protegeP = artist.proteges().attach(pIds),
-          artistP = artist.save(req.body, {patch: true});
-
-      return Promise.all([genreP, mentorP, artistP, protegeP])
-    })
-    .then((artist) => {
       res.status(200).send({message: 'Update successful'});
     })
     .catch((err) => {

@@ -2,48 +2,86 @@
 
 const Bookshelf = require('../bookshelf'),
       Artist = require('../models/Artist'),
+      Promise = require('bluebird'),
       Genre = require('../models/Genre');
 
 
-
-
+      // function generateTree(genre) {
+      //   return genre.fetch({withRelated: ['founders']})
+      //   .then((genre) => {
+      //
+      //     let promises = [];
+      //     // Get each founders proteges.
+      //     genre.related('founders').each(function(artist) {
+      //       promises.push(artist.fetch({withRelated: ['proteges']}));
+      //     })
+      //
+      //     return Promise.all(promises).then(function(artists) {
+      //       let allPromises = [], allArtists = [];
+      //
+      //
+      //       let i = 10;
+      //       function addArtists(artists) {
+      //         let promises = [];
+      //         let method = artists.forEach ? 'forEach' : 'each';
+      //         artists[method]((artist) => {
+      //           let results = addGeneration(artist);
+      //           promises.push(results.then(function(_artists) {
+      //             i--;
+      //             if (i > 0) addArtists(_artists);
+      //             else return;
+      //           }))
+      //         })
+      //         allPromises.push(promises.map(function(p) { return p }));
+      //       }
+      //       addArtists(artists);
+      //
+      //
+      //
+      //       return Promise.all(allPromises).then(function(artists) {
+      //         console.log('All artist', allArtists);
+      //         return genre;
+      //       });
+      //     });
+      //   })
+      // }
 
 function generateTree(genre) {
   return genre.fetch({withRelated: ['founders']})
   .then((genre) => {
 
-    let promises = [];
-    // Get each founders proteges.
-    genre.related('founders').each(function(artist) {
-      promises.push(artist.fetch({withRelated: ['proteges']}));
-    })
+    let promises = [], artists = genre.related('founders');
 
-    return Promise.all(promises).then(function(artists) {
-      let promises = [];
-      //Add protege proteges.
-      artists.forEach(function(artist) {
-        promises.push(addGeneration(artist));
+    function addArtists(artists) {
+
+      artists.each((artist) => {
+        let result = addGeneration(artist)
+        artist.set('proteges', result);
+        promises.push(result);
       })
-      return Promise.all(promises).then(function(artists) {
-        return genre;
-      });
-    });
+
+    }
+
+    function addGeneration(artist) {
+      return artist.related('proteges').fetch().then((artists) => {
+
+        addArtists(artists);
+        return artists;
+      })
+    }
+
+    addArtists(artists);
+
+    return Promise.reduce(promises, function(results, next) {
+      return Promise.all(promises);
+    }).then(() => {
+      return genre;
+    })
   })
 }
 
-function addGeneration(artist) {
-  let promises = [];
-  artist.related('proteges').each(function(p) {
-    promises.push(p.fetch({withRelated:['proteges']}));
-  })
-  return Promise.all(promises).then(function(artists) {
-    let promises = [];
-    artists.forEach(function(a){
-      return addGeneration(a);
-    })
-    return Promise.all(promises)
-  });
-}
+
+
 
 
 

@@ -38,10 +38,13 @@ var artist = Bookshelf.Model.extend({
 
   attacher: function(body) {
     return Promise.all([
-      this.genre().attach(idMap(body.genre)),
+      this.genre().attach(idMap(body.genre || [])),
       this.proteges().attach(idMap(body.proteges || [])),
       this.mentors().attach(idMap(body.mentors || []))
     ])
+    .catch((err) => {
+      throw err;
+    })
   },
 
   detacher: function(body) {
@@ -80,7 +83,6 @@ function byId(col, targets) {
       }
     }
   });
-  console.log('outs this round', out);
   return out;
 }
 
