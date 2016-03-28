@@ -28,6 +28,9 @@ angular.module('influences', [
       resolve: {
         genre: function(genreService, $stateParams) {
           return genreService.getGenre($stateParams.id);
+        },
+        genreList: function(genreService) {
+          return genreService.getAllGenres();
         }
       }
     })

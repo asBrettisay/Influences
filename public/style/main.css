@@ -1,5 +1,5 @@
 .node {
-    fill: #ccc;
+    fill: #1EAEDB;
     stroke: #fff;
     stroke-width: 2px;
 }
@@ -11,7 +11,7 @@
 
 .artist {
   -webkit-text-stroke: 2px #fff;
-  text-shadow: 3px 3px 0 #fff;
+  text-shadow: 1px 1px 0 #fff;
   color: #000;
 }
 
@@ -109,4 +109,8 @@
 
 .clickable {
   cursor: pointer;
+}
+
+.right-margin {
+  margin-right: 25px;
 }

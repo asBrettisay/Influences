@@ -1,4 +1,31 @@
 <div class="container top-margin">
-  <h3>{{vw.genre.name}}</h3>
+  <div class="row">
+    <div class="two columns">
+      <h3 class="u-pull-left">{{vw.genre.name}}</h3>
+    </div>
+    <div class="six columns">
+      <form
+      ng-submit="genre({id: vw.targetGenre.id})"
+      class="u-full-width"
+      >
+        <ui-select ng-model="vw.targetGenre">
+          <ui-select-match placeholder="Search for a genre">
+            {{$select.selected.name}}
+          </ui-select-match>
+
+          <ui-select-choices repeat="genre in vw.genreList">
+            <span ng-bind="genre.name"></span>
+          </ui-select-choices>
+        </ui-select>
+      </form>
+
+    </div>
+    <div class="one columns">
+      <input class="button-primary" type="submit" value="Go to genre"
+        ui-sref="genre({id: vw.targetGenre.id})">
+
+    </div>
+  </div>
+
   <force-chart root="vw.genre"></force-chart>
 </div>

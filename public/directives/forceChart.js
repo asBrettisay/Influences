@@ -88,7 +88,7 @@ angular.module('influences')
           edges.push({
             source: o,
             target: target,
-            d: width/10,
+            d: width/50,
             proteges: person.proteges
           })
         })
@@ -101,13 +101,13 @@ angular.module('influences')
                       .nodes(nodeData)
                       .links(edges)
                       .linkDistance(function(link) {
-                        return link.d ? link.d : width/10;
+                        return link.d ? link.d : width/20;
                       })
                       .linkStrength(1)
-                      .gravity(0)
-                      .friction(0.5)
+                      .gravity(0.2)
+                      .friction(0.7)
                       // .call(force.drag)
-                      .charge(-350)
+                      .charge(-3000)
 
 
       force.start();
@@ -147,6 +147,7 @@ angular.module('influences')
         var animationStep = 800;
         // Update nodes, links, texts
         force.on('tick', function() {
+
           nodes
             // .transition().ease("linear").duration(animationStep)
             .attr('cx', function(d) { return d.x })

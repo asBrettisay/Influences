@@ -223,5 +223,46 @@ describe('artistCtrl', () => {
     })
   })
 
+  it('should remove a mentor', (done) => {
+    let mentor, protege;
+    Promise.all([
+      makeFake.artistAndSave(),
+      makeFake.artistAndSave()
+    ])
+    .spread((_protege, _mentor) => {
+      mentor = _mentor, protege = _protege;
+      return protege.mentors().attach(mentor.id);
+    })
+    .then((result) => {
+      result = result.toJSON();
+      expect(result[0][mentor.id].add).to.equal(true);
+
+      protege.set('mentors', []);
+      protege.set('proteges', []);
+      protege.set('genre', []);
+      chai.request(server)
+      .put('/api/artist/' + protege.id)
+      .send(protege)
+      .end((e, r) => {
+        if (e) console.log(e);
+
+        r.should.have.status(200);
+
+        Artist.forge({id: protege.id})
+        .fetch({
+          withRelated: ['proteges', 'mentors']
+        })
+        .then((artist) => {
+          let mentors = artist.related('mentors').toJSON();
+
+          expect(mentors).to.be.a('array');
+          expect(mentors[0]).to.equal(undefined);
+          done();
+        })
+      })
+
+    })
+  })
+
 
 })
