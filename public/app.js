@@ -15,8 +15,8 @@ angular.module('influences', [
       controller: 'mainCtrl',
       controllerAs: 'main',
       resolve: {
-        genre: function(genreService) {
-          return genreService.getRandomGenre();
+        genreList: function(genreService) {
+          return genreService.getAllGenres();
         }
       }
     })

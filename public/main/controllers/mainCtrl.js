@@ -1,7 +1,4 @@
 angular.module('influences')
-.controller('mainCtrl', function(genre) {
-  this.test = 'Hello world!';
-  this.test2 = 'Directives online!';
-
-  this.genre = genre;
+.controller('mainCtrl', function(genreList) {
+  this.genreList = genreList
 });

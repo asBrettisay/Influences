@@ -1,9 +1,7 @@
 angular.module('influences')
 .service('userService', function($http) {
   this.getCurrentUser = function(cb) {
-    console.log('Getting current user...');
     return $http.get('/api/users/current').then(function(res) {
-      console.log('Res data from get request is', res.data);
       return cb ? cb(res.data) : res.data;
     })
   }

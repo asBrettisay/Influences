@@ -2,7 +2,6 @@ angular.module('influences')
 .controller('indexCtrl', function($scope, userService) {
 
   userService.getCurrentUser().then(function(user) {
-    console.log('User from userService is', user);
     if (user) this.currentUser = user;
   }.bind(this))
 
@@ -18,8 +17,6 @@ angular.module('influences')
     this.active = {};
     this.active.modal = true;
     this.active[modalType] = true;
-    console.log('this is', this);
-    console.log('This active is', this.active);
 
 
   }.bind(this))
@@ -33,5 +30,4 @@ angular.module('influences')
     });
   }.bind(this))
 
-  console.log('Current user is', this.currentUser);
 })
