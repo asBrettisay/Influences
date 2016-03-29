@@ -3,12 +3,17 @@
 const
   Faker = require('faker'),
   Artist = require('../../models/Artist'),
+  Genre = require('../../models/Genre'),
   User = require('../../models/User');
 
 const makeFakeGenre = () => {
   return {
-    name: Faker.company.companyName()
+    name: Faker.company.companyName(),
   }
+}
+
+const makeFakeGenreAndSave = () => {
+  return Genre.forge(makeFakeGenre()).save()
 }
 
 const makeFakeArtist = () => {
@@ -53,5 +58,6 @@ module.exports = {
   artistAndSave: artistAndSave,
   relationships: relationships,
   User: _User,
-  UserAndSave: UserAndSave
+  UserAndSave: UserAndSave,
+  genreAndSave: makeFakeGenreAndSave
 };

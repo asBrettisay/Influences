@@ -30,5 +30,17 @@ angular.module('influences')
     .then(function(res) {
       return res.data;
     })
+  },
+
+
+  this.updateGenre = function(genre) {
+    return $http({
+      method: 'PUT',
+      url: '/api/genre/' + genre.id,
+      data: genre
+    })
+    .then(function(data) {
+      return data.data;
+    })
   }
 });

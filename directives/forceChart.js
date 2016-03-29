@@ -49,10 +49,15 @@ angular.module('influences')
         })
 
         scope.root.proteges.forEach(function(person) {
+          if (!person.type) {
+            console.log(person.type);
+          }
           var o = {
             name: person.name,
             x: center.x,
-            y: center.y
+            y: center.y,
+            type: person.type,
+            id: person.id
           };
 
           nodeData.push(o)
@@ -79,7 +84,9 @@ angular.module('influences')
             name: person.name,
             x: center.x,
             y: center.y,
-            proteges: person.proteges
+            proteges: person.proteges,
+            type: person.type,
+            id: person.id
           };
 
           if (person.proteges) { sortProteges(person, o) }

@@ -1,7 +1,7 @@
 <div class="container top-margin">
   <div class="row">
     <div class="two columns">
-      <h3 class="u-pull-left">{{vw.genre.name}}</h3>
+      <h3 class="u-pull-left" ui-sref="genre.show">{{vw.genre.name}}</h3>
     </div>
     <div class="six columns">
       <form
@@ -13,8 +13,9 @@
             {{$select.selected.name}}
           </ui-select-match>
 
-          <ui-select-choices repeat="genre in vw.genreList">
-            <span ng-bind="genre.name"></span>
+          <ui-select-choices
+          repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
+            <span ng-bind-html="genre.name | highlight: $select.search"></span>
           </ui-select-choices>
         </ui-select>
       </form>
@@ -26,6 +27,8 @@
 
     </div>
   </div>
+
+  <ui-view></ui-view>
 
   <force-chart root="vw.genre"></force-chart>
 </div>

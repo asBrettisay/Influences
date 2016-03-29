@@ -1,7 +1,16 @@
 angular.module('influences')
-.controller('genreCtrl', function($scope, genre, genreList) {
+.controller('genreCtrl', function($scope, artistList, genre, genreList, genreService, $state) {
   this.genre = genre;
 
   this.genreList = genreList
-  console.log(genre);
+
+  this.artistList = artistList
+
+
+  this.updateGenre = function(genre) {
+    genreService.updateGenre(genre)
+    .then(function(result) {
+      $state.go('genre.show', {}, {reload: true});
+    })
+  }
 })

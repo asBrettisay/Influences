@@ -1,0 +1,30 @@
+<form>
+  <h3>Edit Genre</h3>
+  <div class="row">
+    <label for="genreDescription">Description:</label>
+    <textarea name="genreDescription" class="u-full-width"
+       ng-model="vw.genre.description"></textarea>
+
+
+    <!-- Select genre founders -->
+    <label>Select Founding Artists:</label>
+    <ui-select multiple
+    ng-model="vw.genre.founders">
+      <ui-select-match placeholder="Select founders...">
+        {{$item.fullName}}
+      </ui-select-match>
+      <ui-select-choices
+        group-by="vw.groupArtists"
+        repeat="artist in vw.artistList | propsFilter: {fullName: $select.search}"> 
+        <span ng-bind-html="artist.fullName | highlight: $select.search"></span>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+
+
+  <div class="row">
+    <input class="button-primary top-margin" type="submit" value="submit"
+      ng-click="vw.updateGenre(vw.genre)">
+  </div>
+
+</form>

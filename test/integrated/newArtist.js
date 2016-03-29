@@ -13,7 +13,7 @@ describe('angularjs homepage todo list', function() {
     element(by.id('main-menu-button')).click();
     element(by.id('menu-log-in')).click();
 
-    element(by.model('user.username')).sendKeys('Brett@brett.com');
+    element(by.model('user.username')).sendKeys('brett@brett.com');
     element(by.model('user.password')).sendKeys('dogs');
     element(by.id('log-in-button')).click();
 

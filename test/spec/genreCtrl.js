@@ -204,4 +204,68 @@ describe('genreCtrl', () => {
       })
     })
   })
+
+
+  it('should add an artist to a genres artists collection', (done) => {
+    Promise.all([
+      makeFake.artistAndSave(),
+      makeFake.genreAndSave(),
+    ])
+    .spread((artist, genre) => {
+      genre = genre.toJSON();
+      artist = artist.toJSON();
+
+      genre.artists = [artist];
+      chai.request(server)
+      .put('/api/genre/' + genre.id)
+      .send(genre)
+      .end((e, r) => {
+
+        r.should.have.status(200);
+
+        Genre.forge({id: genre.id}).fetch({withRelated: ['artists']})
+        .then(genre => {
+          genre = genre.toJSON();
+          genre.should.have.property('artists');
+          genre.artists.should.be.a('array');
+          genre.artists[0].should.have.property('id');
+          genre.artists[0].id.should.equal(artist.id);
+          done();
+        })
+      })
+    })
+    .catch(err => {console.log(err)});
+  })
+
+  it('should add a founder to a genres founders collection', (done) => {
+    Promise.all([
+      makeFake.artistAndSave(),
+      makeFake.genreAndSave()
+    ])
+    .spread((artist, genre) => {
+      genre = genre.toJSON()
+      artist = artist.toJSON()
+
+      genre.founders = [artist];
+
+      chai.request(server)
+      .put('/api/genre/' + genre.id)
+      .send(genre)
+      .end((e, r) => {
+
+        r.should.have.status(200)
+
+        Genre.forge({id: genre.id}).fetch({withRelated: ['founders']})
+        .then(genre => {
+          genre = genre.toJSON();
+          genre.should.have.property('founders');
+          genre.founders.should.be.a('array');
+          genre.founders[0].should.have.property('id');
+          genre.founders[0].id.should.equal(artist.id);
+          done();
+        })
+      })
+    })
+  })
+
 })

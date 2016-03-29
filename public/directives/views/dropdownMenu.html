@@ -11,13 +11,13 @@
     <ul>
       <li menu-item
       ui-sref="main">
-        Home
+          Home
       </li>
 
       <li menu-item
       ng-if="currentUser"
       ui-sref="profile"
-      >Profile
+      >  Profile
       </li>
 
       <li
@@ -25,14 +25,14 @@
       ng-if="currentUser"
       ui-sref="newArtist"
       id="menu-new-artist">
-        New Artist
+          New Artist
       </li>
 
       <li
       menu-item
       ng-if="currentUser"
       ng-click="logoutUser()">
-        Log Out
+          Log Out
       </li>
 
       <li menu-item ng-if="!currentUser"

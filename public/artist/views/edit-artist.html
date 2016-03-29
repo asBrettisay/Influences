@@ -19,12 +19,12 @@
           {{$item.name}}
         </ui-select-match>
         <ui-select-choices
-        repeat="genre in vw.genreList">
-          <span ng-bind="genre.name"></span>
+        repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
+          <span ng-bind-html="genre.name | highlight: $select.search"></span>
         </ui-select-choices>
       </ui-select>
 
-      <!-- Select Related Artists -->
+      <!-- Select Influence Artists -->
       <label>Select Influences</label>
       <ui-select multiple
       ng-model="vw.artist.mentors"
@@ -35,9 +35,10 @@
           {{$item.fullName}}
         </ui-select-match>
         <ui-select-choices
-        repeat = "artist in vw.artistList"
+        group-by="vw.groupArtists"
+        repeat="artist in vw.artistList | propsFilter: {fullName: $select.search}"
         >
-          <span ng-bind="artist.fullName"></span>
+          <div ng-bind-html="artist.fullName | highlight: $select.search}"></div>
         </ui-select-choices>
       </ui-select>
 

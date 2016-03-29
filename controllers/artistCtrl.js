@@ -11,12 +11,8 @@ module.exports = {
   indexArtists(req, res) {
     Artist.forge()
     .fetchAll()
-    .then((artists) => {
-      res.status(200).json(artists)
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    })
+    .then(artists => res.status(200).json(artists))
+    .catch(err => res.status(500).send(err));
   },
 
   showArtist(req, res) {
@@ -24,12 +20,8 @@ module.exports = {
     .fetch({
       withRelated: ['genre', 'proteges', 'mentors']
     })
-    .then((artist) => {
-      res.status(200).json(artist);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    })
+    .then(artist => res.status(200).json(artist))
+    .catch(err => res.status(500).send(err))
   },
 
   createArtist(req, res) {
@@ -40,18 +32,18 @@ module.exports = {
       proteges: req.body.proteges,
       mentors: req.body.mentors
     };
+
     delete req.body.genre
     delete req.body.proteges
     delete req.body.mentors;
+
     Artist.forge(req.body).save()
-    .then((_artist) => {
+    .then(_artist => {
       artist = _artist;
       return artist.attacher(joins);
     })
-    .then((result) => {
-      res.status(200).json(artist);
-    })
-    .catch((err) => {
+    .then(result => res.status(200).json(artist))
+    .catch(err => {
       console.log(err);
       res.sendStatus(500);
     })
@@ -77,7 +69,7 @@ module.exports = {
         'mentors', 'proteges', 'genre'
       ]
     })
-    .then((_artist) => {
+    .then(_artist => {
       artist = _artist;
       return Promise.all([
         artist.attacher(joins),
@@ -85,10 +77,8 @@ module.exports = {
         artist.save(req.body)
       ]);
     })
-    .then(() => {
-      res.status(200).send({message: 'Update successful'});
-    })
-    .catch((err) => {
+    .then(promises => res.status(200).send({message: 'Update successful'}))
+    .catch(err => {
       console.log('Error updating artist', err);
       res.status(500).send({message: 'Update failed', error: err});
     })
@@ -103,13 +93,9 @@ module.exports = {
       artist.proteges().detach(),
       artist.mentors().detach()
     ])
-    .then(() => {
-      return artist.destroy();
-    })
-    .then((result) => {
-      res.status(200).send({message: "Deleted artist"});
-    })
-    .catch((err) => {
+    .then(promises => artist.destroy())
+    .then(result => res.status(200).send({message: "Deleted artist"}))
+    .catch(err => {
       res.status(500).send({message: "Delete failed:", error: err});
     })
   }
@@ -120,44 +106,14 @@ function getGenresByName(targets) {
 
   let ans;
   return Genre.fetchAll()
-  .then((genres) => {
+  .then(genres => {
     genres = genres.toJSON()
     ans = genres.filter(function(genre) {
       for (var i = 0; i < targets.length; i++) {
         return genre.name === targets[i].name
       }
     })
-    .map(function(genre) {
-      return genre.id;
-    })
+    .map(genre => genre.id)
     return ans;
   })
 }
-
-// function resolveRelationships(artist, body, action) {
-//   var genres = artist.related('genre');
-//   var mentors = artist.related('mentors');
-//   var proteges = artist.related('proteges');
-//
-//   return Promise.all([
-//     genres[action](byId(genres, body.genre)),
-//     mentors[action](byId(mentors, body.mentors)),
-//     proteges[action](byId(proteges, body.proteges))
-//   ])
-// }
-//
-// function byId(col, targets) {
-//   if (!col) {
-//     console.log('Col is undefined. targets is', targets);
-//     return;
-//   }
-//   var out = col.map(function(item) {
-//     for (var i = 0; i < targets.length; i++) {
-//       if (item.id === targets[i].id) {
-//         return targets[i].id;
-//       }
-//     }
-//   });
-//
-//   return out;
-// }

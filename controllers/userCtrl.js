@@ -9,9 +9,7 @@ module.exports = {
   indexUsers(req, res) {
     User.forge()
     .fetchAll()
-    .then((users) => {
-      res.status(200).json(users);
-    })
+    .then(users => res.status(200).json(users))
     .catch((err) => {
       console.log(err);
       res.status(500).send(err);
@@ -28,9 +26,7 @@ module.exports = {
     .fetch({
       columns: ['id', 'username', 'firstName', 'lastName', 'bio', 'email']
     })
-    .then((user) => {
-      res.status(200).json(user);
-    })
+    .then(user => res.status(200).json(user))
     .catch((err) => {
       console.log(err);
       res.status(500).send(err);
@@ -40,9 +36,7 @@ module.exports = {
 
   createUser(req, res) {
     User.forge(req.body).save()
-    .then((user) => {
-      res.status(200).json(user);
-    })
+    .then(user => res.status(200).json(user))
     .catch((err) => {
       console.log(err);
       res.status(500).send(err);
@@ -53,12 +47,8 @@ module.exports = {
     let user = User.forge({id: req.params.id})
 
     user.save(req.body, {patch: true})
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    .then(user => res.status(200).json(user))
+    .catch(err => console.log(err))
   },
 
   deleteUser(req, res) {
@@ -67,9 +57,7 @@ module.exports = {
 
 
     user.destroy()
-    .then((result) => {
-      res.status(200).send('User Deleted')
-    })
+    .then(result => res.status(200).send('User Deleted'))
     .catch((err) => {
       console.log(err);
       res.status(500).send('Error deleting user', err);
@@ -85,17 +73,14 @@ module.exports = {
   }
 };
 
-let showCurrentUser = function(req, res) {
+const showCurrentUser = (req, res) => {
   if (!req.user) res.status(200).send();
 
   else {
     console.log('Current user from userCtrl', req.user);
     User.forge({id: req.user.id}).fetch()
-    .then((user) => {
-      console.log('User from db is', user.toJSON())
-      res.status(200).json(user);
-    })
-    .catch((err) => {
+    .then(user => res.status(200).json(user))
+    .catch(err => {
       console.log(err);
       res.status(500).send(err);
     })

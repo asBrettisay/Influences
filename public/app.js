@@ -31,8 +31,19 @@ angular.module('influences', [
         },
         genreList: function(genreService) {
           return genreService.getAllGenres();
+        },
+        artistList: function(artistService) {
+          return artistService.getAllArtists();
         }
       }
+    })
+    .state('genre.show', {
+      url: '/show',
+      templateUrl: './genre/views/show.html'
+    })
+    .state('genre.edit', {
+      url: '/edit',
+      templateUrl: './genre/views/edit.html'
     })
     .state('artist', {
       url: '/artist/:id',

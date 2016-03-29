@@ -38,7 +38,9 @@ angular.module('influences')
           x: center.x,
           y: center.y,
           fixed: true,
-          root: true
+          root: true,
+          type: scope.root.type,
+          id: scope.root.id
         })
 
         if (scope.root.proteges) {
@@ -48,7 +50,8 @@ angular.module('influences')
               name: person.fullName,
               x: center.x,
               y: center.y,
-              id: person.id
+              id: person.id,
+              type: person.type
             };
 
             nodeData.push(o)
@@ -78,7 +81,8 @@ angular.module('influences')
             x: center.x,
             y: center.y,
             proteges: person.proteges,
-            id: person.id
+            id: person.id,
+            type: person.type
           };
 
           if (person.proteges) { sortProteges(person, o) }
@@ -132,7 +136,7 @@ angular.module('influences')
                        .attr('cy', function(d) { return center.y })
                        .on('click', function(d) {
                          console.log('Clicked', d);
-                         $state.go('artist.show', {id: d.id})
+                         $state.go(d.type + '.show', {id: d.id})
                        })
 
 
