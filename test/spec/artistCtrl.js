@@ -264,5 +264,38 @@ describe('artistCtrl', () => {
     })
   })
 
+  it('should remove a founder from the collection', (done) => {
+    let artist, genre;
+    Promise.all([
+      makeFake.artistAndSave(),
+      makeFake.genreAndSave(),
+    ])
+    .spread((_artist, _genre) => {
+      artist = _artist
+      genre = _genre
+      return genre.related('founders').attach(artist.id)
+    })
+    .then(founders => {
+      genre.founders = [];
+      chai.request(server)
+      .put('/api/genre/' + genre.id)
+      .send(genre)
+      .end((e, r) => {
+
+        r.should.have.status(200)
+
+        Genre.forge({id: genre.id}).fetch({withRelated: ['founders']})
+        .then(_genre => {
+          _genre = _genre.toJSON();
+          _genre.id.should.equal(genre.id)
+          _genre.should.have.property('founders');
+          _genre.founders.should.be.a('array');
+          expect(_genre.founders[0]).to.not.be.ok;
+          done();
+        })
+      })
+    })
+  })
+
 
 })

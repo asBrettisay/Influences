@@ -198,7 +198,7 @@ describe('genreCtrl', () => {
         .then((genre) => {
           genre = genre.toJSON();
           genre.founders.should.be.a('array');
-          genre.founders[0].should.be.ok;
+          expect(genre.founders[0]).to.be.ok;
           done();
         })
       })
@@ -228,8 +228,8 @@ describe('genreCtrl', () => {
           genre = genre.toJSON();
           genre.should.have.property('artists');
           genre.artists.should.be.a('array');
-          genre.artists[0].should.have.property('id');
-          genre.artists[0].id.should.equal(artist.id);
+          expect(genre.artists[0]).to.have.property('id');
+          expect(genre.artists[0].id).to.equal(artist.id);
           done();
         })
       })
@@ -260,8 +260,8 @@ describe('genreCtrl', () => {
           genre = genre.toJSON();
           genre.should.have.property('founders');
           genre.founders.should.be.a('array');
-          genre.founders[0].should.have.property('id');
-          genre.founders[0].id.should.equal(artist.id);
+          expect(genre.founders[0]).to.have.property('id');
+          expect(genre.founders[0].id).to.equal(artist.id);
           done();
         })
       })

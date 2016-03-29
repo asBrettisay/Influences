@@ -8,6 +8,7 @@ angular.module('influences')
 
 
   this.updateGenre = function(genre) {
+    console.log('GEnre in ctrl', genre);
     genreService.updateGenre(genre)
     .then(function(result) {
       $state.go('genre.show', {}, {reload: true});

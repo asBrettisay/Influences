@@ -19,6 +19,14 @@ var genres = Bookshelf.Model.extend({
       'genre_id',
       'founder_id'
     );
+  },
+
+  resolveJoins(targets, target) {
+    return this.related(target).detach()
+    .then(collection => {
+      targets = targets.map(target => target.id);
+      return collection.attach(targets);
+    })
   }
 })
 

@@ -81,30 +81,21 @@ module.exports = {
 
   updateGenre(req, res) {
     Genre.forge({id: req.params.id})
-    .fetch({withRelated: ['founders']})
+    .fetch({withRelated: ['founders', 'artists']})
     .then(genre => {
 
-      let foundersP;
-      if (req.body.founders) {
-        let founders = req.body.founders.map(f => f.id)
+      let foundersP = genre.resolveJoins(req.body.founders || [], 'founders');
+      let artistsP = genre.resolveJoins(req.body.artists || [], 'artists');
+      delete req.body.founders;
+      delete req.body.artists;
 
-        foundersP = genre.founders().attach(founders);
-        delete req.body.founders;
-      }
-
-      let artistsP;
-      if (req.body.artists) {
-        let artists = req.body.artists.map(a => a.id)
-        artistsP = genre.artists().attach(artists);
-        delete req.body.artists;
-      }
-      let patchP = genre.save(req.body, {patch:true});
-
-      return foundersP ?
-      Promise.all([foundersP, patchP, artistsP]) :
-      patchP
+      return Promise.all([
+                          foundersP,
+                          artistsP,
+                          genre.save(req.body)
+                        ])
     })
-    .then(result => res.status(200).send({message: "Update Successful"}))
+    .then(result => res.status(200).send({message: "Update Successful", result: result}))
     .catch(e => {
       console.log('Error updating genre', e);
       res.status(500).send({message: "Error Updating:", e})

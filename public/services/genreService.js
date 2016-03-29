@@ -34,6 +34,14 @@ angular.module('influences')
 
 
   this.updateGenre = function(genre) {
+    genre = {
+      name: genre.name,
+      type: genre.type,
+      founders: genre.founders,
+      artists: genre.artists,
+      id: genre.id
+    }
+    console.log('Genre going to http request', genre);
     return $http({
       method: 'PUT',
       url: '/api/genre/' + genre.id,
