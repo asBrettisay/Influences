@@ -45,6 +45,20 @@ angular.module('influences', [
       url: '/edit',
       templateUrl: './genre/views/edit.html'
     })
+    .state('newGenre', {
+      url: '/genre/new',
+      templateUrl: './newGenre/views/new.html',
+      controller: 'newGenreCtrl',
+      controllerAs: 'vw',
+      resolve: {
+        genreList: function(genreService) {
+          return genreService.getAllGenres();
+        },
+        artistList: function(artistService) {
+          return artistService.getAllArtists();
+        }
+      }
+    })
     .state('artist', {
       url: '/artist/:id',
       templateUrl: './artist/views/artist.html',

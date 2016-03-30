@@ -15,8 +15,25 @@
       </ui-select-match>
       <ui-select-choices
         group-by="vw.groupArtists"
-        repeat="artist in vw.artistList | propsFilter: {fullName: $select.search}"> 
+        repeat="artist in vw.artistList | propsFilter: {fullName: $select.search}">
         <span ng-bind-html="artist.fullName | highlight: $select.search"></span>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+
+  <!-- Select Sub-Genres -->
+  <div class="row">
+    <label>Select Subgenres:</label>
+    <ui-select multiple
+    ng-model="vw.genre.subgenres">
+      <ui-select-match
+      placeholder="Select subgenres directly related to this one">
+      {{$item.name}}
+      </ui-select-match>
+      <ui-select-choices
+        group-by="vw.groupArtists"
+        repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
+        <span ng-bind-html="genre.name | highlight: $select.search"></span>
       </ui-select-choices>
     </ui-select>
   </div>

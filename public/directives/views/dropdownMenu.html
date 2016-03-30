@@ -31,6 +31,14 @@
       <li
       menu-item
       ng-if="currentUser"
+      ui-sref="newGenre"
+      id="menu-new-genre">
+        New Genre
+      </li>
+
+      <li
+      menu-item
+      ng-if="currentUser"
       ng-click="logoutUser()">
           Log Out
       </li>

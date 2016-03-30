@@ -1,4 +1,4 @@
-var width = 1200, height = 800;
+var width = 600, height = 800;
 
 angular.module('influences')
 .service('chartService', function($http, $state) {
@@ -28,7 +28,7 @@ angular.module('influences')
 
         edges.push({
           source: o,
-          target: nodes[0]
+          target: data[0]
         })
 
         var next = node.proteges || node.subgenres;
@@ -38,33 +38,36 @@ angular.module('influences')
 
     }
 
+    function sortNext(nodes, target) {
+      var o;
+
+      nodes.forEach(function(node) {
+        o = {
+          name: node.fullName || node.name,
+          next: node.subgenres || node.proteges,
+          id: node.id,
+          type: node.type,
+          text: node.name
+        };
+
+        if (node.next) sortNext(node, o)
+
+        data.push(o);
+
+        edges.push({
+          source: o,
+          target: target
+        })
+      })
+    }
+
     return {
       nodes: data,
       links: edges
     }
   }
 
-  function sortNext(nodes, target) {
-    var o;
 
-    nodes.forEach(function(node) {
-      o = {
-        name: node.fullName || node.name,
-        next: node.subgenres || node.proteges,
-        id: node.id,
-        type: node.type
-      };
-
-      if (node.next) sortNext(node, o)
-
-      data.push(o);
-
-      edges.push({
-        source: o,
-        target: target
-      })
-    })
-  }
 
   this.initForce = function(data, edges) {
     data = data || [];

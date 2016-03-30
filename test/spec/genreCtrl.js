@@ -79,7 +79,7 @@ describe('genreCtrl', () => {
 
 
 
-  it('should get a list of all genres', (done) => {
+  it.skip('should get a list of all genres', (done) => {
     Genre.forge(makeFake.Genre()).save()
     .then((artist) => {
       chai.request(server)
@@ -267,5 +267,111 @@ describe('genreCtrl', () => {
       })
     })
   })
+
+  it('should add a subgenre', (done) => {
+    Promise.all([
+      makeFake.genreAndSave(),
+      makeFake.genreAndSave()
+    ])
+    .spread((genre, subgenre) => {
+      genre = genre.toJSON();
+      subgenre = subgenre.toJSON();
+      genre.subgenres = [subgenre];
+      chai.request(server)
+      .put('/api/genre/' + genre.id)
+      .send(genre)
+      .end((e, r) => {
+
+        r.should.have.status(200)
+
+        Genre.forge({id: genre.id}).fetch({withRelated: ['subgenres']})
+        .then((genre) => {
+          genre = genre.toJSON();
+          genre.should.have.property("subgenres")
+          var s = genre.subgenres;
+          s.should.be.a('array');
+          expect(s[0]).to.be.ok;
+          s[0].should.be.a('object');
+          s[0].id.should.equal(subgenre.id);
+          done();
+        })
+      })
+    })
+  })
+
+  it('should add a root', (done) => {
+    Promise.all([
+      makeFake.genreAndSave(),
+      makeFake.genreAndSave()
+    ])
+    .spread((root, genre) => {
+      root = root.toJSON()
+      genre = genre.toJSON()
+
+      genre.root = root;
+
+      chai.request(server)
+      .put('/api/genre/' + genre.id)
+      .send(genre)
+      .end((e, r) => {
+
+        r.should.have.status(200)
+
+        Genre.forge({id: genre.id}).fetch({withRelated: ['root']})
+        .then(genre => {
+          genre = genre.toJSON();
+          expect(genre).to.be.a('object');
+          expect(genre).to.have.property('root');
+          expect(genre.root).to.have.property('id');
+          expect(genre.root.id).to.equal(root.id);
+          done();
+
+        })
+      })
+    })
+  })
+
+  it('should make a new genre and add it as a root', (done) => {
+    makeFake.genreAndSave()
+    .then(root => {
+      root = root.toJSON();
+      let genre = makeFake.Genre();
+      genre.root = root;
+
+      chai.request(server)
+      .post('/api/genre/')
+      .send(genre)
+      .end((e, r) => {
+
+        r.should.have.status(200)
+        r.should.have.property('body');
+        r.body.should.have.property('id');
+
+        genre = r.body;
+
+
+        Genre.forge({id: r.body.id}).fetch({withRelated: ['root']})
+        .then(genre => {
+          genre = genre.toJSON();
+          expect(genre).to.be.ok;
+          genre.should.have.property('root');
+          genre.root.should.be.a('object');
+          genre.root.id.should.equal(root.id);
+
+          return Genre.forge({id: root.id}).fetch({withRelated: ['subgenres']})
+        })
+        .then(root => {
+          root = root.toJSON();
+          expect(root).to.be.ok;
+          root.should.have.property('subgenres');
+          root.subgenres.should.be.a('array');
+          root.subgenres[0].id.should.equal(genre.id);
+          done();
+        })
+      })
+    })
+  })
+
+
 
 })

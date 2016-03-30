@@ -2,6 +2,8 @@ angular.module('influences')
 .controller('genreCtrl', function($scope, artistList, genre, genreList, genreService, $state) {
   this.genre = genre;
 
+  console.log('Genre is', this.genre);
+
   this.genreList = genreList
 
   this.artistList = artistList

@@ -1,0 +1,82 @@
+<div class="container top-margin">
+  <form>
+  <h3>Create a new genre</h3>
+  <div class="row">
+    <div class="six columns">
+
+      <label for="genreName">Genre Name:</label>
+      <input
+      class="u-full-width"
+      type="text"
+      ng-model="vw.genre.name"
+      placeholder="Genre Name">
+    </div>
+
+    <div class="six columns">
+        <!-- Select genre founders -->
+        <label>Select Founding Artists:</label>
+        <ui-select multiple
+        ng-model="vw.genre.founders">
+          <ui-select-match placeholder="Select founders...">
+            {{$item.fullName}}
+          </ui-select-match>
+          <ui-select-choices
+            group-by="vw.groupArtists"
+            repeat="artist in vw.artistList | propsFilter: {fullName: $select.search}">
+            <span ng-bind-html="artist.fullName | highlight: $select.search"></span>
+          </ui-select-choices>
+        </ui-select>
+
+      <!-- Select Sub-Genres -->
+        <label>Select Subgenres:</label>
+        <ui-select multiple
+        ng-model="vw.genre.subgenres">
+          <ui-select-match
+          placeholder="Select subgenres directly related to this one">
+          {{$item.name}}
+          </ui-select-match>
+          <ui-select-choices
+            group-by="vw.groupArtists"
+            repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
+            <span ng-bind-html="genre.name | highlight: $select.search"></span>
+          </ui-select-choices>
+        </ui-select>
+
+        <!-- Select Roots -->
+        <label>Select Roots:</label>
+        <ui-select
+        ng-model="vw.genre.root">
+
+          <ui-select-match
+          placeholder="Select another genre from which this one was created">
+          {{$select.selected.name}}
+          </ui-select-match>
+
+          <ui-select-choices
+            group-by="vw.groupArtists"
+            repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
+            <span ng-bind-html="genre.name | highlight: $select.search"></span>
+          </ui-select-choices>
+
+        </ui-select>
+    </div>
+  </div>
+
+
+
+    <div class="row">
+      <label for="genreDescription">Description:</label>
+      <textarea name="genreDescription" class="u-full-width"
+         ng-model="vw.genre.description"></textarea>
+
+
+
+
+
+    <div class="row">
+      <input class="button-primary top-margin" type="submit" value="submit"
+        ng-click="vw.createGenre(vw.genre)">
+    </div>
+
+  </form>
+</div>

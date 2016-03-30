@@ -20,7 +20,7 @@ const generateTree = (genre) => {
       })
     }
 
-    const addGeneration = (artist) => {
+    let addGeneration = (artist) => {
       return artist.related('proteges').fetch()
       .then(artists => {
         addArtists(artists);
@@ -35,6 +35,34 @@ const generateTree = (genre) => {
     })
     .then(promises => genre)
   })
+}
+
+const generateMainTree = rootGenre => {
+  let subgenres = rootGenre.related('subgenres');
+  let promises = [];
+
+  const addGenres = genres => {
+    genres.each(genre => {
+      let result = addGeneration(genre)
+      genre.set('subgenres', result);
+      promises.push(result)
+    })
+  }
+
+  let addGeneration = genre => {
+    return genre.related('subgenres').fetch()
+    .then(genres => {
+      addGenres(genres);
+      return genres;
+    })
+  }
+
+  addGenres(subgenres);
+
+  return Promise.reduce(promises, (results, next) => {
+    return Promise.all(promises);
+  })
+  .then(promises => rootGenre)
 }
 
 
@@ -60,8 +88,16 @@ function addSubgenres(genre, subgenres) {
 
 module.exports = {
   indexGenres(req, res, next) {
-    Genre.forge()
-    .fetchAll()
+    Genre.forge().where({subgenre: false})
+    .fetchAll({withRelated: ['subgenres']})
+    .then(result => {
+      let promises = [];
+      result.each(function(genre) {
+        promises.push(generateMainTree(genre))
+      })
+
+      return Promise.all(promises)
+    })
     .then(result => res.status(200).json(result))
     .catch(error => {
       console.log(error);
@@ -74,7 +110,7 @@ module.exports = {
     Genre.forge({id: req.params.id})
     .fetch({
       withRelated: [
-        'founders', 'artists'
+        'founders', 'artists', 'subgenres'
       ]
     })
     .then(result => generateTree(result))
@@ -86,8 +122,23 @@ module.exports = {
   },
 
   createGenre(req, res) {
-    Genre.forge(req.body)
-    .save()
+    let root;
+
+    if (req.body.root) {
+      root = req.body.root;
+      delete req.body.root;
+    }
+
+    req.body.subgenre = true;
+    req.body.type = 'genre';
+
+    let genre = Genre.forge(req.body);
+
+    if (root) {
+      genre.set('root_id', root.id);
+    }
+
+    genre.save()
     .then(result => res.status(200).json(result))
     .catch(err => {
       console.log('Error creating genre', err);
@@ -100,20 +151,23 @@ module.exports = {
     Genre.forge({id: req.params.id})
     .fetch({withRelated: ['founders', 'artists', 'subgenres']})
     .then(genre => {
+      let promises = [];
 
-      let subgenresP = addSubgenres(genre.toJSON(), req.body.subgenres);
-      let foundersP = genre.resolveJoins(req.body.founders || [], 'founders');
-      let artistsP = genre.resolveJoins(req.body.artists || [], 'artists');
+      if (req.body.root) {
+        promises.push(genre.set('root_id', req.body.root.id).save())
+        delete req.body.root;
+      }
+
+      promises.push(addSubgenres(genre.toJSON(), req.body.subgenres));
+      promises.push(genre.resolveJoins(req.body.founders || [], 'founders'));
+      promises.push(genre.resolveJoins(req.body.artists || [], 'artists'));
+      promises.push(genre.save(req.body, {patch: true}));
+
       delete req.body.founders;
       delete req.body.artists;
       delete req.body.subgenres;
 
-      return Promise.all([
-                          foundersP,
-                          // subgenresP,
-                          artistsP,
-                          genre.save(req.body)
-                        ])
+      return Promise.all(promises)
     })
     .then(result => res.status(200).send({message: "Update Successful", result: result}))
     .catch(e => {

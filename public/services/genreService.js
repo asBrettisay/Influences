@@ -12,6 +12,17 @@ angular.module('influences')
     })
   },
 
+  this.createGenre = function(genre) {
+    return $http({
+      method: 'POST',
+      url: '/api/genre',
+      data: genre
+    })
+    .then(function (response) {
+      return response.data;
+    })
+  }
+
   this.getAllGenres = function() {
     return $http({
       method: 'GET',

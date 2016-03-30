@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.table('genres', function(table) {
-    table.boolean('isSubgenre');
+    table.boolean('subgenre');
     table.integer('root_id').references('genres.id');
     table.integer('genre_id').references('genres.id');
   });

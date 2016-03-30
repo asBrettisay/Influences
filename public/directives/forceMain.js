@@ -1,4 +1,4 @@
-var width = 1200, height = 800;
+var width = 800, height = 800;
 
 angular.module('influences')
 .directive('forceMain', function(chartService, $state) {
