@@ -38,7 +38,23 @@ const generateTree = (genre) => {
 }
 
 
+function addSubgenres(genre, subgenres) {
 
+  if (!subgenres) {
+    return;
+  }
+
+  let promises = [];
+  subgenres.forEach(function(subgenre) {
+    let promise = Genre.forge({id: subgenre.id}).fetch()
+    .then(subgenre => {
+      return subgenre.set('root_id', genre.id).save()
+    });
+    promises.push(promise);
+  })
+
+  return Promise.all(promises);
+}
 
 
 
@@ -54,6 +70,7 @@ module.exports = {
   },
 
   showGenre(req, res) {
+    console.log('In showGenre');
     Genre.forge({id: req.params.id})
     .fetch({
       withRelated: [
@@ -81,16 +98,19 @@ module.exports = {
 
   updateGenre(req, res) {
     Genre.forge({id: req.params.id})
-    .fetch({withRelated: ['founders', 'artists']})
+    .fetch({withRelated: ['founders', 'artists', 'subgenres']})
     .then(genre => {
 
+      let subgenresP = addSubgenres(genre.toJSON(), req.body.subgenres);
       let foundersP = genre.resolveJoins(req.body.founders || [], 'founders');
       let artistsP = genre.resolveJoins(req.body.artists || [], 'artists');
       delete req.body.founders;
       delete req.body.artists;
+      delete req.body.subgenres;
 
       return Promise.all([
                           foundersP,
+                          // subgenresP,
                           artistsP,
                           genre.save(req.body)
                         ])

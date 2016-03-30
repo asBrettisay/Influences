@@ -134,9 +134,8 @@ app.post('/api/seed/joins', function(req, res) {
       res.status(200).send('Success!');
     })
   })
-
-
-
 })
+
+
 
 module.exports = app;
