@@ -4,6 +4,8 @@ angular.module('influences')
 
   this.artist = artist;
 
+  console.log('Artist is', this.artist);
+
   this.artistList = allArtists;
 
   this.genreList = allGenres;

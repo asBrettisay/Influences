@@ -1,15 +1,24 @@
 angular.module('influences')
-.service('artistService', function($http) {
+.service('artistService', function($http, spotifyService) {
 
 
   this.getArtist = function(id) {
+
+    var artist;
     return $http({
       method: 'GET',
-      url: '/api/artist/' + id,
+      url: '/api/artist/' + id
     })
     .then(function(res) {
-      return res.data;
+      artist = res.data;
+      return spotifyService.getArtistImage(artist.fullName)
     })
+    .then(function(image) {
+      artist.image = image;
+      return artist;
+    })
+
+
   }
 
   this.updateArtist = function(artist) {

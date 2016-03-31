@@ -1,4 +1,3 @@
-var width = 600, height = 800;
 
 angular.module('influences')
 .service('chartService', function($http, $state) {
@@ -10,7 +9,8 @@ angular.module('influences')
       text: root.name || root.fullName,
       root: true,
       type: root.type,
-      id: root.id
+      id: root.id,
+      color: getColor()
     })
 
 
@@ -22,7 +22,8 @@ angular.module('influences')
         var o = {
           text: node.name || node.fullName,
           id: node.id,
-          type: node.type
+          type: node.type,
+          color: getColor()
         }
         data.push(o)
 
@@ -47,7 +48,8 @@ angular.module('influences')
           next: node.subgenres || node.proteges,
           id: node.id,
           type: node.type,
-          text: node.name
+          text: node.name,
+          color: getColor()
         };
 
         if (node.next) sortNext(node, o)

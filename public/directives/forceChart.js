@@ -1,4 +1,3 @@
-var width = 1200, height = 800;
 
 angular.module('influences')
 .directive('forceChart', function($compile, $state) {
@@ -131,7 +130,7 @@ angular.module('influences')
                       //  .call(force.drag)
                        .enter().append('circle')
                        .attr('class', 'node')
-                       .attr('r', width/100)
+                       .attr('r', width/80)
                        .attr('cx', function(d) { return center.x })
                        .attr('cy', function(d) { return center.y })
                        .on('click', function(d) {
@@ -146,7 +145,12 @@ angular.module('influences')
                     .attr('class', 'artist')
                     .attr('x', function(d) { return center.x })
                     .attr('y', function(d) { return center.y })
-                    .text(function(d) { return d.name })
+                    .on('click', function(d) {
+                      $state.go(d.type + '.show', {id: d.id})
+                    })
+                    .text(function(d) {
+                      return d.name[0] + ' ' + d.name.slice(1) ;
+                    })
 
         var animationStep = 800;
         // Update nodes, links, texts

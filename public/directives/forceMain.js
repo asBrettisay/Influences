@@ -1,4 +1,3 @@
-var width = 800, height = 800;
 
 angular.module('influences')
 .directive('forceMain', function(chartService, $state) {
@@ -35,8 +34,6 @@ angular.module('influences')
       })
     })
 
-    console.log('Data be like', data);
-
 
     var force = d3.layout.force()
                 .size([width, height])
@@ -63,7 +60,11 @@ angular.module('influences')
                    .data(data)
                    .enter().append('circle')
                    .attr('class', 'node')
-                   .attr('r', width/100)
+                   .style('fill', function(d) {
+                     console.log('d color', d.color);
+                     return d.color;
+                   })
+                   .attr('r', width/80)
                    .attr('cx', function(d) { return d.x })
                    .attr('cy', function(d) { return d.y })
                    .on('click', function(d) {
@@ -71,13 +72,34 @@ angular.module('influences')
                      $state.go(d.type + '.show', {id: d.id})
                    })
 
-     var text = svg.selectAll('text')
-                 .data(data)
-                 .enter().append('text')
-                 .attr('class', 'artist')
-                 .attr('x', function(d) { return d.x })
-                 .attr('y', function(d) { return d.y })
-                 .text(function(d) { return d.text })
+    //  var text = svg.selectAll('text')
+    //              .data(data)
+    //              .enter().append('text')
+    //              .attr('class', 'artist')
+    //              .attr('x', function(d) { return d.x })
+    //              .attr('y', function(d) { return d.y })
+    //              .on('click', function(d) {
+    //                $state.go(d.type + '.show', {id: d.id})
+    //              })
+    //              .text(function(d) {
+    //                return d.text[0] + ' ' + d.text.slice(1);
+    //              })
+
+    var text = svg.selectAll('text')
+                .data(data)
+                .enter().append('foreignObject')
+                .attr('class', 'artist')
+                .attr('x', function(d) { return d.x })
+                .attr('y', function(d) { return d.y })
+                .on('click', function(d) {
+                  $state.go(d.type + '.show', {id: d.id })
+                })
+                .html(function(d) {
+                  return '<span class="artist first">' + d.text[0] + '</span> ' + d.text.slice(1);
+                });
+
+
+
 
     force.on('tick', function() {
       nodes

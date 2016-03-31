@@ -10,9 +10,15 @@
 }
 
 .artist {
-  -webkit-text-stroke: 2px #fff;
-  text-shadow: 1px 1px 0 #fff;
+  /*text-shadow: 1px 1px 1px #fff;*/
   color: #000;
+  transform: translate(-5px, -12px);
+  width: 100%;
+}
+
+.artist .first {
+  color: #FFF;
+  text-shadow: 1px 1px 1px #000;
 }
 
 .block {
@@ -76,7 +82,7 @@
   border: 1px solid #dbdbdb;
   width: 150px;
   padding: 10px;
-  z-index: 1;
+  z-index: 5;
   background-color: #fff;
   border-radius: 10px;
   transform: translate(-10px, 13px);
@@ -139,4 +145,48 @@
   border-bottom: 13px solid #dbdbdb;
   transform: translate(5px, -23px);
   position: absolute;
+}
+
+.artist-header {
+  position: relative;
+  height: 200px;
+}
+
+.artist-header .red {
+  background-color: red;
+  position: absolute;
+  border-radius: 100%;
+  left: 65px;
+  width: 200px;
+  height: 200px;
+  z-index: 1;
+}
+
+.artist-header .blue {
+  background-color: blue;
+  position: absolute;
+  left: 35px;
+  border-radius: 100%;
+  width: 200px;
+  height: 200px;
+  z-index: 2;
+}
+
+.artist-header .black {
+  background-color: #000;
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  z-index: 3;
+
+}
+
+.artist-header img {
+  position: absolute;
+  opacity: 0.6;
+  border-radius: 100%;
+  width: 202px;
+  height: 200px;
+  z-index: 4;
 }

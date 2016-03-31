@@ -1,4 +1,14 @@
-'use strict'
+var height = 800, width = 800;
+
+function getColor() {
+  var colors = ['#1EAEDB', '#DF8756', '#34fc75', '#062ca8', '#a82806']
+
+  function getRandom() {
+    return Math.floor(Math.random() * colors.length);
+  }
+
+  return colors[getRandom()];
+}
 
 angular.module('influences', [
                               'ui.router',

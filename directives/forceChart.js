@@ -27,17 +27,7 @@ angular.module('influences')
         initRoot();
       });
 
-      function selectNode(d) {
-        console.log(d);
-        console.log(nodeData);
-        nodeData.forEach(function(node) {
-          if (node.name === d.name) {
-            scope.root = node;
-            console.log('New root is', scope.root);
-          }
-        })
-        scope.$digest();
-      }
+
 
       function initRoot() {
         nodeData.push({
@@ -135,6 +125,7 @@ angular.module('influences')
                        .attr('cx', function(d) { return center.x })
                        .attr('cy', function(d) { return center.y })
                        .on('click', function(d) {
+
                          $state.go('artist', {id: d.id})
                        })
 
@@ -146,6 +137,10 @@ angular.module('influences')
                     .attr('x', function(d) { return center.x })
                     .attr('y', function(d) { return center.y })
                     .text(function(d) { return d.name })
+                    .on('click', function(d) {
+                      console.log('Clicked', d);
+                      $state.go('artist', {id: d.id})
+                    })
 
 
         // Update nodes, links, texts
