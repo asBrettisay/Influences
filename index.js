@@ -13,8 +13,11 @@ const express = require('express'),
       config = require('./_config.js'),
       passport = require('./passport'),
       Promise = require('bluebird'),
+      pg = require('pg'),
       Strategy = require('passport-local').Strategy;
 
+
+pg.defaults.ssl = true;
 
 // Initialize Express.
 var app = express();
