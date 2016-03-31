@@ -61,7 +61,6 @@ angular.module('influences')
                    .enter().append('circle')
                    .attr('class', 'node')
                    .style('fill', function(d) {
-                     console.log('d color', d.color);
                      return d.color;
                    })
                    .attr('r', width/80)
@@ -72,18 +71,7 @@ angular.module('influences')
                      $state.go(d.type + '.show', {id: d.id})
                    })
 
-    //  var text = svg.selectAll('text')
-    //              .data(data)
-    //              .enter().append('text')
-    //              .attr('class', 'artist')
-    //              .attr('x', function(d) { return d.x })
-    //              .attr('y', function(d) { return d.y })
-    //              .on('click', function(d) {
-    //                $state.go(d.type + '.show', {id: d.id})
-    //              })
-    //              .text(function(d) {
-    //                return d.text[0] + ' ' + d.text.slice(1);
-    //              })
+
 
     var text = svg.selectAll('text')
                 .data(data)
@@ -97,8 +85,6 @@ angular.module('influences')
                 .html(function(d) {
                   return '<span class="artist first">' + d.text[0] + '</span> ' + d.text.slice(1);
                 });
-
-
 
 
     force.on('tick', function() {
@@ -116,11 +102,6 @@ angular.module('influences')
         .attr('x', function(d) { return d.x })
         .attr('y', function(d) { return d.y })
     })
-
-
-
-
-
 
   }
 })

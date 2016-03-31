@@ -106,7 +106,6 @@ module.exports = {
   },
 
   showGenre(req, res) {
-    console.log('In showGenre');
     Genre.forge({id: req.params.id})
     .fetch({
       withRelated: [
@@ -190,7 +189,7 @@ module.exports = {
   },
 
   getRandomGenre(req, res, next) {
-    console.log('Going to get random genre');
+
     Genre.forge().fetchAll()
     .then(genres => genres.query({where: {id: 2}}).fetchOne({columns: 'id'}))
     .then(num => res.status(200).json({id: num.get('id')}))

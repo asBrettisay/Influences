@@ -1,13 +1,11 @@
 angular.module('influences')
 .service('genreService', function($http, $state) {
   this.getRandomGenre = function() {
-    console.log('Going to get random genre...');
     return $http({
       method: 'GET',
       url: '/api/genre/random'
     })
     .success(function(res) {
-      console.log('Going to genre id', res);
       $state.go('genre', {id: res.id});
     })
   },
@@ -52,7 +50,6 @@ angular.module('influences')
       artists: genre.artists,
       id: genre.id
     }
-    console.log('Genre going to http request', genre);
     return $http({
       method: 'PUT',
       url: '/api/genre/' + genre.id,

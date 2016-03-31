@@ -77,7 +77,7 @@ const showCurrentUser = (req, res) => {
   if (!req.user) res.status(200).send();
 
   else {
-    console.log('Current user from userCtrl', req.user);
+
     User.forge({id: req.user.id}).fetch()
     .then(user => res.status(200).json(user))
     .catch(err => {

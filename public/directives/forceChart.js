@@ -127,7 +127,6 @@ angular.module('influences')
 
         var nodes = svg.selectAll('nodes')
                        .data(nodeData)
-                      //  .call(force.drag)
                        .enter().append('circle')
                        .attr('class', 'node')
                        .attr('r', width/80)
@@ -139,37 +138,34 @@ angular.module('influences')
                        })
 
 
-        var text = svg.selectAll('text')
-                    .data(nodeData)
-                    .enter().append('text')
-                    .attr('class', 'artist')
-                    .attr('x', function(d) { return center.x })
-                    .attr('y', function(d) { return center.y })
-                    .on('click', function(d) {
-                      $state.go(d.type + '.show', {id: d.id})
-                    })
-                    .text(function(d) {
-                      return d.name[0] + ' ' + d.name.slice(1) ;
-                    })
+         var text = svg.selectAll('text')
+                     .data(nodeData)
+                     .enter().append('foreignObject')
+                     .attr('class', 'artist')
+                     .attr('x', function(d) { return d.x })
+                     .attr('y', function(d) { return d.y })
+                     .on('click', function(d) {
+                       $state.go(d.type + '.show', {id: d.id })
+                     })
+                     .html(function(d) {
+                       return '<span class="artist first">' + d.name[0] + '</span> ' + d.name.slice(1);
+                     });
 
         var animationStep = 800;
         // Update nodes, links, texts
         force.on('tick', function() {
 
           nodes
-            // .transition().ease("linear").duration(animationStep)
             .attr('cx', function(d) { return d.x })
             .attr('cy', function(d) { return d.y })
 
           links
-            // .transition().ease("linear").duration(animationStep)
             .attr('x1', function(d) { return d.source.x })
             .attr('x2', function(d) { return d.target.x })
             .attr('y1', function(d) { return d.source.y })
             .attr('y2', function(d) { return d.target.y })
 
           text
-            // .transition().ease("linear").duration(animationStep)
             .attr('x', function(d) { return d.x })
             .attr('y', function(d) { return d.y })
         })
