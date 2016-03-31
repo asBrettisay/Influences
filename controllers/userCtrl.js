@@ -68,7 +68,15 @@ module.exports = {
     if (req.user) {
       next()
     } else {
-      res.redirect('/login')
+      res.sendStatus(401);
+    }
+  },
+
+  isAdmin(req, res, next) {
+    if (req.user.admin) {
+      next()
+    } else {
+      res.sendStatus(401);
     }
   }
 };

@@ -14,6 +14,7 @@
   color: #000;
   transform: translate(-5px, -12px);
   width: 100%;
+  cursor: pointer;
 }
 
 .artist .first {

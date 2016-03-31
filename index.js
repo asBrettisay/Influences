@@ -77,24 +77,24 @@ app.get('/api/genre/', genre.indexGenres);
 app.get('/api/genre/:id', genre.showGenre);
 
 app.post('/api/genre/', genre.createGenre);
-app.put('/api/genre/:id', genre.updateGenre);
-app.delete('/api/genre/:id', genre.deleteGenre);
+app.put('/api/genre/:id', user.isAuth, genre.updateGenre);
+app.delete('/api/genre/:id', user.isAuth, genre.deleteGenre);
 
 //Artists.
 app.get('/api/artist/', artist.indexArtists);
 app.get('/api/artist/:id', artist.showArtist);
-app.post('/api/artist/', artist.createArtist);
-app.put('/api/artist/:id', artist.updateArtist);
-app.delete('/api/artist/:id', artist.deleteArtist);
+app.post('/api/artist/', user.isAuth, artist.createArtist);
+app.put('/api/artist/:id', user.isAuth, artist.updateArtist);
+app.delete('/api/artist/:id', user.isAuth, artist.deleteArtist);
 
 //Users.
-app.get('/api/users/', user.indexUsers);
-app.get('/api/users/:id', user.showUser);
-app.post('/api/users/', user.createUser);
-app.put('/api/users/:id', user.updateUser);
-app.delete('/api/users/:id', user.deleteUser);
+app.get('/api/users/', user.isAuth, user.indexUsers);
+app.get('/api/users/:id', user.isAuth, user.showUser);
+app.post('/api/users/', user.isAuth, user.createUser);
+app.put('/api/users/:id', user.isAuth, user.updateUser);
+app.delete('/api/users/:id', user.isAuth, user.deleteUser);
 
-app.post('/api/seed/joins', function(req, res) {
+app.post('/api/seed/joins', user.isAuth, user.isAdmin, function(req, res) {
 
   var founders = [];
 
