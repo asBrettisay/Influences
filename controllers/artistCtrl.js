@@ -62,6 +62,7 @@ module.exports = {
     delete req.body.mentors;
     delete req.body.proteges;
     delete req.body.genre;
+    delete req.body.image;
 
     Artist.forge({id: req.params.id})
     .fetch({
