@@ -9,7 +9,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha test test/spec*",
     "protractor": "NODE_ENV=test protractor test/integrated/conf.js",
-    "postinstall": "knex migrate:latest --env development test; knex seed:run",
+    "postinstall": "knex migrate:latest --env production; knex seed:run",
     "prestart": "npm run postinstall"
   },
   "repository": {
@@ -37,7 +37,7 @@
     "knex": "^0.10.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "pg": "^4.5.1",
+    "pg": "4.5.2",
     "selectize": "^0.12.1"
   },
   "devDependencies": {
