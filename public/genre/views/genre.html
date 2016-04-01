@@ -1,30 +1,11 @@
 <div class="container top-margin">
   <div class="row">
-    <div class="two columns">
-      <h3 class="u-pull-left" ui-sref="genre.show">{{vw.genre.name}}</h3>
-    </div>
-    <div class="six columns">
-      <form
-      ng-submit="genre({id: vw.targetGenre.id})"
-      class="u-full-width"
-      >
-        <ui-select ng-model="vw.targetGenre">
-          <ui-select-match placeholder="Search for a genre">
-            {{$select.selected.name}}
-          </ui-select-match>
-
-          <ui-select-choices
-          repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
-            <span ng-bind-html="genre.name | highlight: $select.search"></span>
-          </ui-select-choices>
-        </ui-select>
-      </form>
+    <div class="three columns">
+      <h3 class="u-pull-left">{{vw.genre.name}}</h3>
 
     </div>
-    <div class="one columns">
-      <input class="button-primary" type="submit" value="Go to genre"
-        ui-sref="genre({id: vw.targetGenre.id})">
-
+    <div class="six columns u-pull-right">
+      <search-bar></search-bar>
     </div>
   </div>
 
