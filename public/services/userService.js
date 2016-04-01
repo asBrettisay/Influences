@@ -47,11 +47,23 @@ angular.module('influences')
       method: 'POST',
       url: '/logout',
     })
-    .success(function(res) {
+    .then(function(res) {
       return res;
     })
     .error(function(err) {
       console.log(err);
+    })
+  }
+
+  this.getInviteToken = function() {
+    console.log('in User service');
+    return $http({
+      method: 'POST',
+      url: '/api/users/token'
+    })
+    .then(function(res) {
+      console.log(res);
+      return res.data;
     })
   }
 

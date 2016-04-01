@@ -47,9 +47,15 @@ const _User = () => {
 
 const UserAndSave = () => {
   let user = User.forge(_User());
-
-
-  return user.save();
+  let password = user.password;
+  return user.generateHash(password)
+  .then(hash => {
+    user.set('password', hash)
+    return user.save();
+  })
+  .then(user => {
+    console.log(user);
+  })
 }
 
 module.exports = {

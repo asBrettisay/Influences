@@ -35,19 +35,19 @@ var user = Bookshelf.Model.extend({
   validatePassword: function(password, cb) {
 
     let err, res;
-
-    bcrypt.compare(password, this.password, function(_err, _res) {
+    console.log('Going to bcrypt');
+    bcrypt.compare(password, this.get('password'), function(_err, _res) {
       err = _err, res = _res;
+      console.log('Err in bcrypt', err);
+      console.log('in bcrypt');
+      console.log('res in bcrypt', res);
       if (cb) {
         cb(err, res);
       }
-
     })
     return Promise.resolve(res);
 
-    // return bcrypt.compareSync(password, this.get('password'), function(err, res) {
-    //   return res;
-    // });
+
   }
 });
 

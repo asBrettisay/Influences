@@ -17,7 +17,6 @@ const express = require('express'),
       Strategy = require('passport-local').Strategy;
 
 
-pg.defaults.ssl = true;
 
 // Initialize Express.
 var app = express();
@@ -57,6 +56,7 @@ app.post('/login',
   });
 
 app.post('/signup',
+  user.isInvited,
   passport.authenticate('signup', {
     failureRedirect: '/',
   }),
@@ -93,7 +93,10 @@ app.delete('/api/artist/:id', user.isAuth, artist.deleteArtist);
 //Users.
 app.get('/api/users/', user.isAuth, user.indexUsers);
 app.get('/api/users/:id', user.isAuth, user.showUser);
+
 app.post('/api/users/', user.isAuth, user.createUser);
+app.post('/api/users/token', user.isAuth, user.isAdmin, user.createInviteToken);
+
 app.put('/api/users/:id', user.isAuth, user.updateUser);
 app.delete('/api/users/:id', user.isAuth, user.deleteUser);
 

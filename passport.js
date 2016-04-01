@@ -13,12 +13,21 @@ passport.use('login', new Strategy(
         return done(null, false);
       }
 
-      user.validatePassword(password).then((res) => {
-        if (!user.validatePassword(password)) {
+      return user.validatePassword(password, function(err, res) {
+        if(res) {
+          return done(null, user.toJSON())
+        } else {
           return done(null, false);
-        };
-        return done(null, user.toJSON());
+        }
       })
+
+      // user.validatePassword(password).then((res) => {
+      //   console.log('Res from validate password', res);
+      //   if (!user.validatePassword(password)) {
+      //     return done(null, false);
+      //   };
+      //   return done(null, user.toJSON());
+      // })
     })
     .catch((err) => {
       return done(err);

@@ -4,4 +4,4 @@
 </h5>
 <p id="artist-bio-bio">{{vw.artist.description}}</p>
 
-<button ui-sref="artist.edit">Edit Artist</button>
+<button ng-if="index.currentUser" ui-sref="artist.edit">Edit Artist</button>

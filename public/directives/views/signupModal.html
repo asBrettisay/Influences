@@ -12,9 +12,15 @@
   id="passwordInput"
   ng-model="user.password"
   >
+  <input class="u-full-width"
+  type="text"
+  placeholder="Enter invite token"
+  ng-model="user.inviteToken"
+  >
   <input class="button-primary"
   type="submit"
   value="Submit"
   ng-click="signupUser(user)"
   >
+
 </form>

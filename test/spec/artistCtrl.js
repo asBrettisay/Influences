@@ -22,7 +22,7 @@ chai.use(chaiHttp);
 describe('artistCtrl', () => {
 
 
-  var testArtist, testGenre, testFounder;
+  var testArtist, testGenre, testFounder, testUser, testAdmin
   before((done) => {
     migrate.rollback()
     .then(() => {
@@ -55,12 +55,12 @@ describe('artistCtrl', () => {
       return Promise.all([
         g.artists().attach([g.id, f.id]),
         g.founders().attach(f),
-        f.proteges().attach(a)
-
+        f.proteges().attach(a),
+        makeFake.UserAndSave()
       ]);
     })
-    .then(() => {
-      done();
+    .then((a) => {
+      testUser = a[4];
     })
     .catch((err) => {
       throw err;
@@ -150,8 +150,9 @@ describe('artistCtrl', () => {
   });
 
 
-  it('should update one artist', (done) => {
+  it.only('should update one artist', (done) => {
     testArtist.genre = [testGenre];
+    console.log()
     chai.request(server)
     .put('/api/artist/' + testArtist.id)
     .send({

@@ -8,9 +8,7 @@
   },
   "scripts": {
     "test": "NODE_ENV=test mocha test test/spec*",
-    "protractor": "NODE_ENV=test protractor test/integrated/conf.js",
-    "postinstall": "knex migrate:latest --env production",
-    "prestart": "npm run postinstall"
+    "protractor": "NODE_ENV=test protractor test/integrated/conf.js"
   },
   "repository": {
     "type": "git",
