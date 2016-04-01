@@ -37,6 +37,8 @@ module.exports = {
     delete req.body.proteges
     delete req.body.mentors;
 
+    req.body.type = 'artist'
+
     Artist.forge(req.body).save()
     .then(_artist => {
       artist = _artist;
