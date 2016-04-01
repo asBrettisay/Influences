@@ -1,5 +1,16 @@
 angular.module('influences')
 .service('genreService', function($http, $state) {
+
+  this.getMainGenres = function() {
+    return $http({
+      method: 'GET',
+      url: '/api/main/genres'
+    })
+    .then(function(res) {
+      return res.data;
+    })
+  }
+
   this.getRandomGenre = function() {
     return $http({
       method: 'GET',

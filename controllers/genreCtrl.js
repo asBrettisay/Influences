@@ -87,7 +87,8 @@ function addSubgenres(genre, subgenres) {
 
 
 module.exports = {
-  indexGenres(req, res, next) {
+  indexMainGenres(req, res, next) {
+    console.log('In indexMainGenres');
     Genre.forge().where({subgenre: false})
     .fetchAll({withRelated: ['subgenres']})
     .then(result => {
@@ -103,6 +104,13 @@ module.exports = {
       console.log(error);
       res.status(500).send(error);
     })
+  },
+
+  indexGenres(req, res, next) {
+    console.log('in indexGenres');
+    Genre.forge().fetchAll()
+    .then(result => res.status(200).json(result))
+    .catch(err => {res.status(500).send(err)});
   },
 
   showGenre(req, res) {

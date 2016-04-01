@@ -78,6 +78,7 @@ app.post('/logout', function(req, res) {
 //Genres.
 app.get('/api/genre/', genre.indexGenres);
 app.get('/api/genre/:id', genre.showGenre);
+app.get('/api/main/genres/', genre.indexMainGenres);
 
 app.post('/api/genre/', genre.createGenre);
 app.put('/api/genre/:id', user.isAuth, genre.updateGenre);
