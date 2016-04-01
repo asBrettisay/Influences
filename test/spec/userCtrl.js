@@ -19,11 +19,11 @@ const
   migrate = knex.migrate;
 
 chai.use(chaiHttp);
-
+const agent = chai.request.agent(server);
 describe('userCtrl', () => {
 
 
-  let testUser1, testUser2, newUser;
+  let testUser, testUser2, newUser, testUserPassword;
   before((done) => {
     migrate.rollback()
     .then(() => {
@@ -45,7 +45,8 @@ describe('userCtrl', () => {
       ])
     })
     .then((users) => {
-      testUser1 = users[0]
+      testUser = users[0].user
+      testUserPassword = users[0].password
       testUser2 = users[1]
       done();
     })
@@ -62,89 +63,116 @@ describe('userCtrl', () => {
     })
   })
 
+  function login() {
+    testUser = testUser.toJSON();
+    testUser.password = testUserPassword;
+    return agent.post('/login').send(testUser);
+  }
+
 
   it('should show all users', (done) => {
-    chai.request(server)
-    .get('/api/users/')
-    .end((e, r) => {
-      if (e) throw e;
-      r.should.have.status(200);
-      r.body.should.be.a('array');
-      r.body[0].should.be.ok;
-      done();
+
+    login()
+    .then(() => {
+      agent
+      .get('/api/users/')
+      .end((e, r) => {
+        if (e) throw e;
+        r.should.have.status(200);
+        r.body.should.be.a('array');
+        r.body[0].should.be.ok;
+        done();
+      })
     })
+
   });
 
 
   it('should show one user', (done) => {
-    chai.request(server)
-    .get('/api/users/' + testUser1.id)
-    .end((e, r) => {
-      if (e) throw e;
+    login()
+    .then(() => {
+      agent
+      .get('/api/users/' + testUser.id)
+      .end((e, r) => {
+        if (e) throw e;
 
-      r.should.have.status(200);
-      r.body.should.be.a('object');
-      r.body.username.should.equal(testUser1.get('username'));
-      done();
+        r.should.have.status(200);
+        r.body.should.be.a('object');
+        r.body.username.should.equal(testUser.username);
+        done();
+      })
     })
+
   });
 
 
   it('should create a user', (done) => {
-    chai.request(server)
-    .post('/api/users/')
-    .send(newUser)
-    .end((e, r) => {
-      if (e) throw e;
+    login()
+    .then(() => {
+      agent
+      .post('/api/users/')
+      .send(newUser)
+      .end((e, r) => {
+        if (e) throw e;
 
-      r.should.have.status(200);
-      r.body.should.be.a('object');
-      r.body.username.should.equal(newUser.username);
+        r.should.have.status(200);
+        r.body.should.be.a('object');
+        r.body.username.should.equal(newUser.username);
 
-      User.forge({id: r.body.id}).fetch()
-      .then((user) => {
-        expect(user.get('username')).to.equal(newUser.username);
-        done();
+        User.forge({id: r.body.id}).fetch()
+        .then((user) => {
+          expect(user.get('username')).to.equal(newUser.username);
+          done();
+        })
       })
     })
+
   });
 
 
   it('should update a user', (done) => {
-    chai.request(server)
-    .put('/api/users/' + testUser1.id)
-    .send({email: 'test@example.com'})
-    .end((e, r) => {
-      if (e) throw e;
+    login()
+    .then(() => {
+      agent
+      .put('/api/users/' + testUser.id)
+      .send({email: 'test@example.com'})
+      .end((e, r) => {
+        if (e) throw e;
 
-      r.should.have.status(200);
-      r.body.should.be.a('object');
-      r.body.should.have.property('email');
-      r.body.email.should.not.equal(testUser1.get('email'));
+        r.should.have.status(200);
+        r.body.should.be.a('object');
+        r.body.should.have.property('email');
+        r.body.email.should.not.equal(testUser.email);
 
-      User.forge(testUser1.id).fetch()
-      .then((user) => {
-        expect(user.get('email')).to.not.equal(testUser1.get('email'));
-        expect(user.get('username')).to.equal(testUser1.get('username'));
-        done();
+        User.forge(testUser.id).fetch()
+        .then((user) => {
+          expect(user.get('email')).to.not.equal(testUser.email);
+          expect(user.get('username')).to.equal(testUser.username);
+          done();
+        })
+
       })
-
     })
+
   });
   it('should delete a user', (done) => {
-    chai.request(server)
-    .delete('/api/users/' + testUser1.id)
-    .end((e, r) => {
-      if (e) throw e;
+    login()
+    .then(() => {
+      agent
+      .delete('/api/users/' + testUser.id)
+      .end((e, r) => {
+        if (e) throw e;
 
-      r.should.have.status(200)
+        r.should.have.status(200)
 
-      User.forge({id: testUser1.id}).fetch()
-      .then((user) => {
-        expect(user).to.not.be.ok;
-        done();
+        User.forge({id: testUser.id}).fetch()
+        .then((user) => {
+          expect(user).to.not.be.ok;
+          done();
+        })
       })
     })
+
   });
 
   it('should log in a valid user', (done) => {
@@ -180,7 +208,7 @@ describe('userCtrl', () => {
     })
   })
 
-  it('should sign up a user', (done) => {
+  it.skip('should sign up a user', (done) => {
     chai.request(server)
     .post('/signup')
     .send(makeFake.User())
