@@ -63,7 +63,9 @@ angular.module('influences')
                    .style('fill', function(d) {
                      return d.color;
                    })
-                   .attr('r', width/80)
+                   .attr('r', function(d) {
+                     return d.r || width/80
+                   })
                    .attr('cx', function(d) { return d.x })
                    .attr('cy', function(d) { return d.y })
                    .on('click', function(d) {
