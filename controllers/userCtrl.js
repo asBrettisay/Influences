@@ -68,7 +68,7 @@ module.exports = {
     if (req.user) {
       next()
     } else {
-      res.sendStatus(401);
+    res.sendStatus(401);
     }
   },
 
@@ -78,8 +78,35 @@ module.exports = {
     } else {
       res.sendStatus(401);
     }
+  },
+
+  createInviteToken(req, res) {
+    User.forge({inviteToken: makeInviteToken()}).save()
+    .then(user => res.status(200).json(user));
+  },
+
+  isInvited(req, res, next) {
+    User.forge({inviteToken: req.body.inviteToken}).fetch()
+    .then(user => {
+      if (user) {
+        next()
+      } else {
+        res.sendStatus(401);
+      }
+    })
+
   }
 };
+
+const makeInviteToken = () => {
+  var t = "";
+  var p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for( var i=0; i <= 8; i++ )
+     t += p.charAt(Math.floor(Math.random() * p.length));
+
+     return t;
+}
 
 const showCurrentUser = (req, res) => {
   if (!req.user) res.status(200).send();

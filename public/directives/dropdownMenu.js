@@ -14,8 +14,11 @@ angular.module('influences')
 
       $scope.logoutUser = function() {
         userService.logoutUser()
-        $scope.menuActive = false;
-        $state.go('main');
+        .then(function() {
+          $scope.menuActive = false;
+          $state.go('main', {}, {reload: true});
+        })
+
       }
 
       $scope.$on('close menu', function() {
