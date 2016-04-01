@@ -133,6 +133,9 @@ angular.module('influences', [
     .state('admin.genres', {
       templateUrl: './admin/views/genres.html'
     })
+    .state('admin.users', {
+      templateUrl: './admin/views/users.html'
+    })
 
 
 })

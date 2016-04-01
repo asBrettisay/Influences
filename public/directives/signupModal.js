@@ -7,7 +7,7 @@ angular.module('influences')
     controller: function($scope, userService, $state) {
       $scope.signupUser = function(user) {
         userService.signupUser(user).then(function(res) {
-          $state.go('/');
+          $state.go('main', {}, {reload: true});
         })
       }
 

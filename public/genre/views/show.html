@@ -3,4 +3,4 @@
 
 <p id="genre-description">{{vw.genre.description}}</p>
 
-<button ui-sref="genre.edit">Edit Genre</button>
+<button ng-if="index.currentUser" ui-sref="genre.edit">Edit Genre</button>
