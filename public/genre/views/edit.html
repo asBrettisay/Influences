@@ -39,6 +39,28 @@
   </div>
 
 
+  <!-- Select Root Genres -->
+  <div class="row" ng-if="vw.genre.subgenre">
+    <!-- Select Roots -->
+    <label>Select Roots:</label>
+    <ui-select
+    ng-model="vw.genre.root">
+
+      <ui-select-match
+      placeholder="Select another genre from which this one was created">
+      {{$select.selected.name}}
+      </ui-select-match>
+
+      <ui-select-choices
+        group-by="vw.groupArtists"
+        repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
+        <span ng-bind-html="genre.name | highlight: $select.search"></span>
+      </ui-select-choices>
+
+    </ui-select>
+  </div>
+
+
   <div class="row">
     <input class="button-primary top-margin" type="submit" value="submit"
       ng-click="vw.updateGenre(vw.genre)">

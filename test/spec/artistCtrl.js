@@ -17,16 +17,31 @@ const
   knex = require('knex')(config.test),
   migrate = knex.migrate;
 
+
+
 chai.use(chaiHttp);
+
+const agent = chai.request.agent(server);
+
+
 
 describe('artistCtrl', () => {
 
 
-  var testArtist, testGenre, testFounder, testUser, testAdmin
+  var testArtist,
+      testGenre,
+      testFounder,
+      testUser,
+      testAdmin,
+      session,
+      testUserPassword,
+      testAdminPassword;
+
+
   before((done) => {
     migrate.rollback()
     .then(() => {
-      done();
+      done()
     })
     .catch((err) => {
       console.log(err);
@@ -56,11 +71,16 @@ describe('artistCtrl', () => {
         g.artists().attach([g.id, f.id]),
         g.founders().attach(f),
         f.proteges().attach(a),
+        makeFake.UserAndSave(),
         makeFake.UserAndSave()
       ]);
     })
-    .then((a) => {
-      testUser = a[4];
+    .then(a => {
+      testUser = a[3].user
+      testAdmin = a[4].user
+      testUserPassword = a[3].password
+      testAdminPassword = a[4].password
+      done();
     })
     .catch((err) => {
       throw err;
@@ -79,113 +99,141 @@ describe('artistCtrl', () => {
     })
   })
 
+  function login() {
+    testUser = testUser.toJSON();
+    testUser.password = testUserPassword;
+    return agent.post('/login').send(testUser)
+  }
+
   it('should show all artists', (done) => {
     Artist.forge(makeFake.Artist()).save()
     .then(() => {
-      chai.request(server)
-      .get('/api/artist/')
-      .end((e, r) => {
-        if (e) throw e;
 
-        r.should.have.status(200)
-        r.body.should.be.a('array');
-        r.body[0].should.have.property('fullName')
-        done();
+      return login()
+    .then(value => {
+      agent
+        .get('/api/artist/')
+        .end((e, r) => {
+          if (e) throw e;
+
+          r.should.have.status(200)
+          r.body.should.be.a('array');
+          r.body[0].should.have.property('fullName')
+          done();
+        })
       })
     })
   });
   it('should show one artist', (done) => {
-    chai.request(server)
-    .get('/api/artist/' + testFounder.id)
-    .end((e, r) => {
-      if (e) throw e;
-      r.should.have.status(200)
-      r.body.should.be.a('object');
-      r.body.should.have.property('fullName');
-      r.body.fullName.should.equal(testFounder.get('fullName'));
+    login()
+    .then(() => {
+      agent
+      .get('/api/artist/' + testFounder.id)
+      .end((e, r) => {
+        if (e) throw e;
+        r.should.have.status(200)
+        r.body.should.be.a('object');
+        r.body.should.have.property('fullName');
+        r.body.fullName.should.equal(testFounder.get('fullName'));
 
-      r.body.should.have.property('genre');
-      let g = r.body.genre;
-      g.should.be.a('array');
-      expect(g[0]).to.be.ok;
+        r.body.should.have.property('genre');
+        let g = r.body.genre;
+        g.should.be.a('array');
+        expect(g[0]).to.be.ok;
 
-      r.body.should.have.property('proteges');
+        r.body.should.have.property('proteges');
 
-      let p = r.body.proteges;
-      p.should.be.a('array');
-      expect(p[0]).to.be.ok;
+        let p = r.body.proteges;
+        p.should.be.a('array');
+        expect(p[0]).to.be.ok;
 
-      r.body.should.have.property('mentors');
+        r.body.should.have.property('mentors');
 
-      r.body.mentors.should.be.a('array');
+        r.body.mentors.should.be.a('array');
 
-      done();
+        done();
+      })
     })
+
   });
   it('should create an artist with existing genre', (done) => {
     var newArtist = makeFake.Artist();
     newArtist.genre = [testGenre.toJSON()];
-    chai.request(server)
-    .post('/api/artist/')
-    .send(newArtist)
-    .end((e, r) => {
-      if (e) throw e;
 
 
-      r.should.have.status(200);
-      r.body.should.be.a('object');
-      r.body.should.have.property('fullName');
-      r.body.fullName.should.equal(newArtist.fullName);
+    login()
+    .then(() => {
+      agent
+      .post('/api/artist/')
+      .send(newArtist)
+      .end((e, r) => {
+        if (e) throw e;
 
-      Artist.where({id: r.body.id})
-        .fetch({withRelated: 'genre'})
-      .then((artist) => {
-        artist = artist.toJSON();
-        let genre = artist.genre;
-        expect(genre[0].name).to.equal(testGenre.get('name'));
-        expect(artist.fullName).to.equal(newArtist.fullName);
-        done();
+
+        r.should.have.status(200);
+        r.body.should.be.a('object');
+        r.body.should.have.property('fullName');
+        r.body.fullName.should.equal(newArtist.fullName);
+
+        Artist.where({id: r.body.id})
+          .fetch({withRelated: 'genre'})
+        .then((artist) => {
+          artist = artist.toJSON();
+          let genre = artist.genre;
+          expect(genre[0].name).to.equal(testGenre.get('name'));
+          expect(artist.fullName).to.equal(newArtist.fullName);
+          done();
+        })
       })
     })
+
   });
 
 
-  it.only('should update one artist', (done) => {
+  it('should update one artist', (done) => {
+    testUser = testUser.toJSON();
+    testUser.password = testUserPassword;
     testArtist.genre = [testGenre];
-    console.log()
-    chai.request(server)
-    .put('/api/artist/' + testArtist.id)
-    .send({
-        fullName: 'test',
-        genre: [testGenre],
-        mentors: [testFounder], proteges: []
-      })
-    .end((e, r) => {
-      if (e) throw e;
+    agent.post('/login').send(testUser)
+    .end(user => {
+      console.log('Logged in with', user);
+      agent.put('/api/artist/' + testArtist.id)
+      .send({
+          fullName: 'test',
+          genre: [testGenre],
+          mentors: [testFounder], proteges: []
+        })
+      .end((e, r) => {
+        if (e) throw e;
 
-      r.should.have.status(200)
+        r.should.have.status(200)
 
-      Artist.forge({id: testArtist.id}).fetch()
-      .then((artist) => {
-        expect(artist.get('fullName')).to.be.ok;
-        expect(artist.get('fullName')).to.not.equal(testArtist.get('fullName'));
-        done();
+        Artist.forge({id: testArtist.id}).fetch()
+        .then((artist) => {
+          expect(artist.get('fullName')).to.be.ok;
+          expect(artist.get('fullName')).to.not.equal(testArtist.get('fullName'));
+          done();
+        })
       })
     })
+
   });
   it('should delete an artist', (done) => {
-    chai.request(server)
-    .delete('/api/artist/' + testArtist.id)
-    .end((e, r) => {
-      if (e) throw e;
+    login()
+    .then(() => {
+      agent
+      .delete('/api/artist/' + testArtist.id)
+      .end((e, r) => {
+        if (e) throw e;
 
-      r.should.have.status(200)
+        r.should.have.status(200)
 
-      Artist.forge({id: testArtist.id})
-      .fetch()
-      .then((artist) => {
-        expect(artist).to.equal(null);
-        done();
+        Artist.forge({id: testArtist.id})
+        .fetch()
+        .then((artist) => {
+          expect(artist).to.equal(null);
+          done();
+        })
       })
     })
   });
@@ -241,26 +289,31 @@ describe('artistCtrl', () => {
       protege.set('mentors', []);
       protege.set('proteges', []);
       protege.set('genre', []);
-      chai.request(server)
-      .put('/api/artist/' + protege.id)
-      .send(protege)
-      .end((e, r) => {
-        if (e) console.log(e);
 
-        r.should.have.status(200);
+      login()
+      .then(() => {
+        agent
+        .put('/api/artist/' + protege.id)
+        .send(protege)
+        .end((e, r) => {
+          if (e) console.log(e);
 
-        Artist.forge({id: protege.id})
-        .fetch({
-          withRelated: ['proteges', 'mentors']
-        })
-        .then((artist) => {
-          let mentors = artist.related('mentors').toJSON();
+          r.should.have.status(200);
 
-          expect(mentors).to.be.a('array');
-          expect(mentors[0]).to.equal(undefined);
-          done();
+          Artist.forge({id: protege.id})
+          .fetch({
+            withRelated: ['proteges', 'mentors']
+          })
+          .then((artist) => {
+            let mentors = artist.related('mentors').toJSON();
+
+            expect(mentors).to.be.a('array');
+            expect(mentors[0]).to.equal(undefined);
+            done();
+          })
         })
       })
+
 
     })
   })
@@ -278,25 +331,28 @@ describe('artistCtrl', () => {
     })
     .then(founders => {
       genre.founders = [];
-      chai.request(server)
-      .put('/api/genre/' + genre.id)
-      .send(genre)
-      .end((e, r) => {
 
-        r.should.have.status(200)
+      login()
+      .then(() => {
+        agent
+        .put('/api/genre/' + genre.id)
+        .send(genre)
+        .end((e, r) => {
 
-        Genre.forge({id: genre.id}).fetch({withRelated: ['founders']})
-        .then(_genre => {
-          _genre = _genre.toJSON();
-          _genre.id.should.equal(genre.id)
-          _genre.should.have.property('founders');
-          _genre.founders.should.be.a('array');
-          expect(_genre.founders[0]).to.not.be.ok;
-          done();
+          r.should.have.status(200)
+
+          Genre.forge({id: genre.id}).fetch({withRelated: ['founders']})
+          .then(_genre => {
+            _genre = _genre.toJSON();
+            _genre.id.should.equal(genre.id)
+            _genre.should.have.property('founders');
+            _genre.founders.should.be.a('array');
+            expect(_genre.founders[0]).to.not.be.ok;
+            done();
+          })
         })
       })
+
     })
   })
-
-
 })
