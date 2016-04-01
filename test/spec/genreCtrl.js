@@ -303,7 +303,6 @@ describe('artistCtrl', () => {
       makeFake.genreAndSave()
     ])
     .spread((_artist, _genre) => {
-      console.log('In spread')
       genre = _genre.toJSON()
       artist = _artist.toJSON()
       genre.founders = [artist];

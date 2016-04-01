@@ -139,14 +139,22 @@ module.exports = {
 
     req.body.subgenre = true;
     req.body.type = 'genre';
+    let subgenres = req.body.subgenres;
+
+    delete req.body.subgenres;
 
     let genre = Genre.forge(req.body);
+
+
 
     if (root) {
       genre.set('root_id', root.id);
     }
+    addGenres(genre, subgenres)
+    .then(() => {
+      return genre.save()
 
-    genre.save()
+    })
     .then(result => res.status(200).json(result))
     .catch(err => {
       console.log('Error creating genre', err);
@@ -174,6 +182,10 @@ module.exports = {
       delete req.body.artists;
       delete req.body.subgenres;
       
+      promises.push(genre.save(req.body, {patch: true}));
+
+
+
       promises.push(genre.save(req.body, {patch: true}));
 
 
