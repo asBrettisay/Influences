@@ -72,6 +72,8 @@ function addSubgenres(genre, subgenres) {
     return;
   }
 
+
+
   let promises = [];
   subgenres.forEach(function(subgenre) {
     let promise = Genre.forge({id: subgenre.id}).fetch()
@@ -88,7 +90,6 @@ function addSubgenres(genre, subgenres) {
 
 module.exports = {
   indexMainGenres(req, res, next) {
-    console.log('In indexMainGenres');
     Genre.forge().where({subgenre: false})
     .fetchAll({withRelated: ['subgenres']})
     .then(result => {
@@ -107,7 +108,6 @@ module.exports = {
   },
 
   indexGenres(req, res, next) {
-    console.log('in indexGenres');
     Genre.forge().fetchAll()
     .then(result => res.status(200).json(result))
     .catch(err => {res.status(500).send(err)});

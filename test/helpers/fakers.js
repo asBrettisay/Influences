@@ -47,14 +47,18 @@ const _User = () => {
 
 const UserAndSave = () => {
   let user = User.forge(_User());
-  let password = user.password;
+  let password = user.get('password');
+
   return user.generateHash(password)
   .then(hash => {
     user.set('password', hash)
     return user.save();
   })
   .then(user => {
-    console.log(user);
+    return {
+      user: user,
+      password: password
+    };
   })
 }
 
