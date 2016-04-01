@@ -75,6 +75,27 @@ app.post('/logout', function(req, res) {
   res.status(200).send('Logged out!');
 })
 
+app.get('/api/search/', function(req, res) {
+  let query = req.query.query;
+
+  console.log('Query is', query);
+
+  Promise.all([
+    Artist.forge().where('fullName', '~*', query).fetchAll(),
+    Genre.forge().where('name', '~*', query).fetchAll(),
+  ])
+  .spread((artistResults, genreResults) => {
+
+    let ans = [];
+    if (artistResults) artistResults.each((artist) => ans.push(artist));
+    if (genreResults) genreResults.each((genre) => ans.push(genre));
+
+    console.log('Ans is', ans);
+    res.status(200).json(ans);
+
+  })
+})
+
 //Genres.
 app.get('/api/genre/', genre.indexGenres);
 app.get('/api/genre/:id', genre.showGenre);

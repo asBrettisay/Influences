@@ -1,0 +1,25 @@
+
+<form>
+
+  <ui-select ng-model="vw.targetItem">
+    <ui-select-match
+    placeholder="Search for an artist or genre">
+      {{$select.selected.name || $select.selected.fullName}}
+    </ui-select-match>
+
+    <ui-select-choices
+    repeat="item in vw.items track by $index"
+    refresh="vw.refreshItems($select.search)"
+    refresh-delay="0"
+    >
+      <span ng-bind-html="item.name || item.fullName | highlight: $select.search">
+      </span>
+    </ui-select-choices>
+  </ui-select>
+</form>
+
+<button
+  class="button-primary"
+  ng-click="vw.goTo(vw.targetItem)"
+  >Go
+</button>

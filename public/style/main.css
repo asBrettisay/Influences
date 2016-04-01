@@ -191,3 +191,7 @@
   height: 200px;
   z-index: 4;
 }
+
+.top-nav h3 {
+  display: inline-block;
+}
