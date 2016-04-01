@@ -34,7 +34,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-const port = 3000;
+const port = 80;
 app.listen(port, () => {
   console.log('Listening on', port);
 })

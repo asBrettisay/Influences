@@ -1,0 +1,24 @@
+warn:    --minUptime not set. Defaulting to: 1000ms
+warn:    --spinSleepTime not set. Your script will exit if it does not stay up for at least 1000ms
+/home/influences/Influences/node_modules/knex/lib/index.js:17
+  if (arguments.length === 0 || !config.client && !config.dialect) {
+                                       ^
+
+TypeError: Cannot read property 'client' of undefined
+    at Knex (/home/influences/Influences/node_modules/knex/lib/index.js:17:40)
+    at Object.<anonymous> (/home/influences/Influences/bookshelf.js:2:27)
+    at Module._compile (module.js:413:34)
+    at Object.Module._extensions..js (module.js:422:10)
+    at Module.load (module.js:357:32)
+    at Function.Module._load (module.js:314:12)
+    at Module.require (module.js:367:17)
+    at require (internal/module.js:16:19)
+    at Object.<anonymous> (/home/influences/Influences/controllers/genreCtrl.js:3:19)
+    at Module._compile (module.js:413:34)
+    at Object.Module._extensions..js (module.js:422:10)
+    at Module.load (module.js:357:32)
+    at Function.Module._load (module.js:314:12)
+    at Module.require (module.js:367:17)
+    at require (internal/module.js:16:19)
+    at Object.<anonymous> (/home/influences/Influences/index.js:5:15)
+error: Forever detected script exited with code: 1
