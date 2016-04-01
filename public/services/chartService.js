@@ -10,7 +10,8 @@ angular.module('influences')
       root: true,
       type: root.type,
       id: root.id,
-      color: getColor()
+      color: getColor(),
+      r: root.subgenre ? undefined : width/50
     })
 
 
