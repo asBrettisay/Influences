@@ -38,7 +38,7 @@ var artist = Bookshelf.Model.extend({
 
   attacher: function(body) {
     return Promise.all([
-      this.genre().attach(idMap(body.genre || [])),
+      this.founder().attach(idMap(body.genre || [])),
       this.proteges().attach(idMap(body.proteges || [])),
       this.mentors().attach(idMap(body.mentors || []))
     ])
