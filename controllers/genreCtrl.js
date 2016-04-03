@@ -60,6 +60,8 @@ const generateMainTree = rootGenre => {
 
   addGenres(subgenres);
 
+  promises.push(Promise.resolve('foo'));
+
   return Promise.reduce(promises, (results, next) => {
     return Promise.all(promises);
   })
@@ -70,7 +72,7 @@ const generateMainTree = rootGenre => {
 function addSubgenres(genre, subgenres) {
 
   if (!subgenres) {
-    return;
+    return Promise.resolve();
   }
 
 
@@ -150,7 +152,7 @@ module.exports = {
     if (root) {
       genre.set('root_id', root.id);
     }
-    addGenres(genre, subgenres)
+    addSubgenres(genre, subgenres)
     .then(() => {
       return genre.save()
 
