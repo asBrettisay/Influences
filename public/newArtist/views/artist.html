@@ -11,6 +11,22 @@
         type="text"
         ng-model="vw.artist.fullName"
         placeholder="Artist Name">
+
+        <label>Artist Genre:</label>
+        <ui-select multiple
+        ng-model="vw.artist.genre">
+          <ui-select-match
+          placeholder="Select genre..."
+          >
+          {{$item.name}}
+        </ui-select-match>
+        <ui-select-choices
+        group-by="vw.groupArtists"
+        repeat="genre in vw.genreList | propsFilter: {name: $select.search}">
+          <span ng-bind-html="genre.name | highlight: $select.search"></span>
+        </ui-select-choices>
+      </ui-select>
+
       </div>
       <div class="six columns">
       <!-- UI-Selects -->
@@ -18,10 +34,10 @@
         <!-- Select Related Genre -->
         <label>This artist founded:<label>
         <ui-select multiple
-        ng-model="vw.artist.genre"
+        ng-model="vw.artist.founder"
         >
           <ui-select-match
-          placeholder="Select genre..."
+          placeholder="Select founding genre"
           >
             {{$item.name}}
           </ui-select-match>

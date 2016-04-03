@@ -59,12 +59,9 @@ module.exports = {
     let joins = {
       mentors: req.body.mentors,
       proteges: req.body.proteges,
-      genres: req.body.genres
+      genres: req.body.genres,
+      founder: req.body.founder
     }
-    delete req.body.mentors;
-    delete req.body.proteges;
-    delete req.body.genre;
-    delete req.body.image;
 
     Artist.forge({id: req.params.id})
     .fetch({
@@ -77,7 +74,10 @@ module.exports = {
       return Promise.all([
         artist.attacher(joins),
         artist.detacher(joins),
-        artist.save(req.body)
+        artist.save({
+          fullName: req.body.fullName,
+          description: req.body.description,
+        })
       ]);
     })
     .then(promises => res.status(200).send({message: 'Update successful'}))
