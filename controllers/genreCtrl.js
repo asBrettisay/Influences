@@ -183,6 +183,10 @@ module.exports = {
       delete req.body.founders;
       delete req.body.artists;
       delete req.body.subgenres;
+      
+      promises.push(genre.save(req.body, {patch: true}));
+
+
 
       promises.push(genre.save(req.body, {patch: true}));
 
