@@ -145,7 +145,12 @@ module.exports = {
 
     delete req.body.subgenres;
 
-    let genre = Genre.forge(req.body);
+    let genre = Genre.forge({
+      name: req.body.name,
+      type: 'genre',
+      subgenre: 'true',
+      description: req.body.description
+    });
 
 
 
@@ -183,7 +188,7 @@ module.exports = {
       delete req.body.founders;
       delete req.body.artists;
       delete req.body.subgenres;
-      
+
       promises.push(genre.save(req.body, {patch: true}));
 
 
