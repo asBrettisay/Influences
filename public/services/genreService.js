@@ -59,7 +59,8 @@ angular.module('influences')
       type: genre.type,
       founders: genre.founders,
       artists: genre.artists,
-      id: genre.id
+      id: genre.id,
+      description: genre.description
     }
     return $http({
       method: 'PUT',

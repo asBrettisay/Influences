@@ -11,7 +11,6 @@ angular.module('influences')
       vw.refreshItems = function(query) {
         searchService.searchForName(query)
         .then(function(data) {
-          console.log('Data from search is', data);
           vw.items = data;
         })
       }

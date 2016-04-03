@@ -2,7 +2,6 @@ angular.module('influences')
 .controller('genreCtrl', function($scope, artistList, genre, genreList, genreService, $state) {
   this.genre = genre;
 
-  console.log('Genre is', this.genre);
 
   this.genreList = genreList
 
@@ -10,7 +9,6 @@ angular.module('influences')
 
 
   this.updateGenre = function(genre) {
-    console.log('GEnre in ctrl', genre);
     genreService.updateGenre(genre)
     .then(function(result) {
       $state.go('genre.show', {}, {reload: true});

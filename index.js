@@ -36,7 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-const port = 80;
+const port = 3000;
 app.listen(port, () => {
   console.log('Listening on', port);
 })
@@ -78,7 +78,6 @@ app.post('/logout', function(req, res) {
 app.get('/api/search/', function(req, res) {
   let query = req.query.query;
 
-  console.log('Query is', query);
 
   Promise.all([
     Artist.forge().where('fullName', '~*', query).fetchAll(),
@@ -90,7 +89,6 @@ app.get('/api/search/', function(req, res) {
     if (artistResults) artistResults.each((artist) => ans.push(artist));
     if (genreResults) genreResults.each((genre) => ans.push(genre));
 
-    console.log('Ans is', ans);
     res.status(200).json(ans);
 
   })
@@ -148,7 +146,6 @@ app.post('/api/seed/joins', user.isAuth, user.isAdmin, function(req, res) {
     .forEach(function(i) {
       founders.push(i.id);
     });
-    console.log('Founders ids', founders);
   })
 
 

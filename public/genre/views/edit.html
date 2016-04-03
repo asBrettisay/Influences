@@ -43,12 +43,12 @@
   <div class="row" ng-if="vw.genre.subgenre">
     <!-- Select Roots -->
     <label>Select Roots:</label>
-    <ui-select
+    <ui-select multiple
     ng-model="vw.genre.root">
 
       <ui-select-match
       placeholder="Select another genre from which this one was created">
-      {{$select.selected.name}}
+      {{$item.name}}
       </ui-select-match>
 
       <ui-select-choices

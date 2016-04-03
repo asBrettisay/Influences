@@ -12,7 +12,6 @@ angular.module('influences')
             password: user.password,
           })
           .then(function(res) {
-            console.log('Res is', res);
             $state.go('genre', {id: 2})
             $scope.$emit('modal action complete')
           })

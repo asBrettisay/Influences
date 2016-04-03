@@ -18,7 +18,6 @@ module.exports = {
 
   showUser(req, res) {
     if (req.params.id === 'current') {
-      console.log('getting current user...')
       return showCurrentUser(req, res);
     }
 

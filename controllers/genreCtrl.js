@@ -29,9 +29,7 @@ const generateTree = (genre) => {
     }
 
     addArtists(artists);
-    console.log('Initial promise count', promises.length);
     return Promise.reduce(promises, (results, next) => {
-      console.log('Results this time', promises.length);
       return Promise.all(promises);
     })
     .then(promises => genre)
@@ -189,9 +187,7 @@ module.exports = {
       delete req.body.artists;
       delete req.body.subgenres;
 
-      promises.push(genre.save(req.body, {patch: true}));
-
-
+      console.log(req.body.description);
 
       promises.push(genre.save(req.body, {patch: true}));
 

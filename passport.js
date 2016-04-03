@@ -21,13 +21,6 @@ passport.use('login', new Strategy(
         }
       })
 
-      // user.validatePassword(password).then((res) => {
-      //   console.log('Res from validate password', res);
-      //   if (!user.validatePassword(password)) {
-      //     return done(null, false);
-      //   };
-      //   return done(null, user.toJSON());
-      // })
     })
     .catch((err) => {
       return done(err);

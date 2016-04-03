@@ -17,11 +17,9 @@ angular.module('influences')
 
 
   this.generateInviteToken = function() {
-    console.log('Getting token');
     var that = this;
     userService.getInviteToken()
     .then(function(token) {
-      console.log(token);
       that.inviteToken = token.inviteToken;
     });
   }.bind(this);

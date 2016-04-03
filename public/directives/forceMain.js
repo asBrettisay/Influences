@@ -69,7 +69,6 @@ angular.module('influences')
                    .attr('cx', function(d) { return d.x })
                    .attr('cy', function(d) { return d.y })
                    .on('click', function(d) {
-                     console.log('Clicked', d);
                      $state.go(d.type + '.show', {id: d.id})
                    })
 

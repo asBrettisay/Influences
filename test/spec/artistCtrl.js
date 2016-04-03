@@ -156,6 +156,8 @@ describe('artistCtrl', () => {
     })
 
   });
+
+
   it('should create an artist with existing genre', (done) => {
     var newArtist = makeFake.Artist();
     newArtist.genre = [testGenre.toJSON()];
@@ -176,11 +178,11 @@ describe('artistCtrl', () => {
         r.body.fullName.should.equal(newArtist.fullName);
 
         Artist.where({id: r.body.id})
-          .fetch({withRelated: 'genre'})
+          .fetch({withRelated: 'founder'})
         .then((artist) => {
           artist = artist.toJSON();
-          let genre = artist.genre;
-          expect(genre[0].name).to.equal(testGenre.get('name'));
+          let founder = artist.founder;
+          expect(founder[0].name).to.equal(testGenre.get('name'));
           expect(artist.fullName).to.equal(newArtist.fullName);
           done();
         })

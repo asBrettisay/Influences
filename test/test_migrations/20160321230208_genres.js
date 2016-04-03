@@ -7,6 +7,7 @@ exports.up = function(knex, Promise) {
     table.boolean('subgenre');
     table.integer('root_id').references('genres.id');
     table.integer('genre_id').references('genres.id');
+    table.text('description');
   }).createTable('artists', function(table) {
     table.increments('id').primary();
     table.string('fullName');
