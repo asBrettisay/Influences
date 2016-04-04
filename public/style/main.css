@@ -195,3 +195,20 @@
 .top-nav h3 {
   display: inline-block;
 }
+
+.force-main {
+  overflow: scroll;
+  position: relative;
+  width: 800px;
+  height: 800px;
+}
+
+#chart {
+  display: block;
+  margin: auto;
+  position: absolute;
+  top: -100px;
+  right: -20%;
+
+  width: 1200px;
+}

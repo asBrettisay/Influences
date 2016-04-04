@@ -3,7 +3,7 @@ angular.module('influences')
 .directive('forceMain', function(chartService, $state) {
   return {
     restrict: 'E',
-    template: "<svg height="+ height + " width=" + width +"></svg>",
+    template: "<div class='force-main'><svg id='chart' height="+ height + " width=" + width +"></svg></div>",
     scope: {
       root: '=',
     },
@@ -41,7 +41,7 @@ angular.module('influences')
                 .links(edges)
                 .linkDistance(width/20)
                 .linkStrength(1)
-                .gravity(0.2)
+                .gravity(0.4)
                 .friction(0.7)
                 .charge(-3000)
 
@@ -86,6 +86,7 @@ angular.module('influences')
                 .html(function(d) {
                   return '<span class="artist first">' + d.text[0] + '</span> ' + d.text.slice(1);
                 });
+
 
 
     force.on('tick', function() {
