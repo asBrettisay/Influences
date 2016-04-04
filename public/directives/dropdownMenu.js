@@ -30,7 +30,6 @@ angular.module('influences')
     link: function(scope, elem, attrs) {
       var menuButton = elem.find('div.menuButtonContainer');
       menuButton.on('mouseenter', function() {
-        console.log('Mouse enter');
         menuButton.toggleClass('menuButtonContainerHover');
       })
 

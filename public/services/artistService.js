@@ -36,7 +36,7 @@ angular.module('influences')
     return $http({
       method: 'GET',
       url: '/api/artist/',
-    })
+  })
     .then(function(res) {
       return res.data;
     })

@@ -1,4 +1,4 @@
-'use strict'
+ 'use strict'
 
 const express = require('express'),
       bodyParser = require('body-parser'),
@@ -36,7 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-const port = 3000;
+const port = 80;
 app.listen(port, () => {
   console.log('Listening on', port);
 })
@@ -113,6 +113,7 @@ app.delete('/api/artist/:id', user.isAuth, artist.deleteArtist);
 //Users.
 app.get('/api/users/', user.isAuth, user.indexUsers);
 app.get('/api/users/:id', user.isAuth, user.showUser);
+app.get('/api/current/user', user.getCurrentUser);
 
 app.post('/api/users/', user.isAuth, user.createUser);
 app.post('/api/users/token', user.isAuth, user.isAdmin, user.createInviteToken);

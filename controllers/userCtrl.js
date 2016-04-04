@@ -16,6 +16,10 @@ module.exports = {
     })
   },
 
+  getCurrentUser(req, res) {
+    return showCurrentUser(req, res);
+  },
+
   showUser(req, res) {
     if (req.params.id === 'current') {
       return showCurrentUser(req, res);
@@ -113,7 +117,10 @@ const showCurrentUser = (req, res) => {
   else {
 
     User.forge({id: req.user.id}).fetch()
-    .then(user => res.status(200).json(user))
+    .then(user => {
+      if (!user) res.sendStatus(200);
+      else res.status(200).json(user);
+    })
     .catch(err => {
       console.log(err);
       res.status(500).send(err);
